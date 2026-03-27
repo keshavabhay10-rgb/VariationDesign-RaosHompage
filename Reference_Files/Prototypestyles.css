@@ -1,0 +1,529 @@
+/* ============================================
+   BASE / RESET
+   ============================================ */
+
+:root {
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --bg-primary: #0D0D0D;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* GSAP handles smoothness, not CSS */
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: #fff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ============================================
+   SPACER SECTIONS (placeholder for other sections)
+   ============================================ */
+
+.spacer-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+}
+
+.spacer-content {
+  text-align: center;
+  color: #555;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+
+/* ============================================
+   SECTION 3: QH 3D CARD GALLERY
+   ============================================ */
+
+/* Scroll container — drives the pinned animation */
+.qh-container {
+  height: 500vh; /* 5x viewport = lots of scroll runway for smooth card transitions */
+  position: relative;
+}
+
+/* Pinned visible area */
+.qh-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #B8B8B8; /* KEY: warm neutral gray, NOT black, NOT white */
+}
+
+/* ---- ENVIRONMENT BACKGROUND ---- */
+.qh-environment {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  /* Multi-layered radial gradients creating organic depth variation */
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(160,160,165,0.8) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(140,140,145,0.6) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 80%, rgba(120,120,125,0.5) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 20%, rgba(170,170,175,0.4) 0%, transparent 40%),
+    linear-gradient(135deg, #AEAEB2 0%, #C8C8CC 25%, #B0B0B4 50%, #BCBCC0 75%, #A8A8AC 100%);
+
+  filter: contrast(1.05);
+}
+
+/* Grain overlay ON TOP of environment */
+.qh-environment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  pointer-events: none;
+}
+
+/* ---- PERSPECTIVE CONTAINER ---- */
+.qh-cards-perspective {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  perspective: 1200px;             /* CRITICAL: creates the 3D depth */
+  perspective-origin: 50% 45%;     /* Camera slightly above center */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- CARDS TRACK ---- */
+.qh-cards-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transform-style: preserve-3d;    /* CRITICAL: children exist in 3D space */
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- INDIVIDUAL CARD ---- */
+.qh-card {
+  position: absolute;
+  width: 540px;
+  height: 370px;
+  border-radius: 10px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+
+  /* Shadow that sells the floating-in-space illusion */
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.25),
+    0 10px 20px rgba(0,0,0,0.15);
+
+  /* Cards positioned by left 50% so translateX is relative to center */
+  left: 50%;
+  top: 50%;
+  margin-left: -270px; /* half of 540px */
+  margin-top: -185px;  /* half of 370px */
+
+  /* Default state: invisible */
+  opacity: 0;
+}
+
+.qh-card-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.qh-card-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* ---- METADATA ROW ---- */
+.qh-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 1.5rem 2.5rem 2rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+
+  /* Subtle gradient so text is readable over any card edge */
+  background: linear-gradient(to top, rgba(184,184,184,0.95) 0%, rgba(184,184,184,0.6) 60%, transparent 100%);
+}
+
+.qh-meta-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.qh-meta-name {
+  font-family: var(--font-body);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.qh-meta-arrow {
+  color: #1a1a1a;
+  transition: transform 0.3s;
+}
+.qh-meta-title:hover .qh-meta-arrow {
+  transform: translate(2px, -2px);
+}
+
+.qh-meta-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.qh-meta-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #666;
+}
+.qh-meta-value {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  transition: opacity 0.25s ease;
+}
+
+.qh-meta-year {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  flex-shrink: 0;
+}
+
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 1023px) {
+  .qh-card {
+    width: 420px;
+    height: 290px;
+    margin-left: -210px;
+    margin-top: -145px;
+  }
+  .qh-meta {
+    padding: 1rem 1.5rem 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .qh-meta-col:nth-child(n+4) {
+    display: none; /* Hide last columns on tablet */
+  }
+}
+
+@media (max-width: 767px) {
+  .qh-container {
+    height: auto; /* No scroll-driven animation on mobile */
+  }
+  .qh-section {
+    height: auto;
+    padding: 4rem 0;
+  }
+  .qh-cards-perspective {
+    position: relative;
+    perspective: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    align-items: center;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+  .qh-cards-track {
+    display: flex;
+    gap: 1.5rem;
+    position: relative;
+    width: auto;
+  }
+  .qh-card {
+    position: relative;
+    width: 85vw;
+    height: 55vw;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    left: auto;
+    top: auto;
+    margin: 0;
+  }
+  .qh-meta {
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    background: none;
+    padding: 1.5rem;
+  }
+  .qh-meta-col {
+    display: flex !important; /* Override tablet hide */
+  }
+}
+
+
+/* ============================================
+   SECTION 4: JOBY AVIATION WIPE-LINE — v3
+   ============================================ */
+
+.joby-outer {
+  position: relative;
+}
+
+.joby-scroll-spacer {
+  height: 500vh;
+  position: relative;
+}
+
+.joby-pinned {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #F5F2EC; /* KEY: Off-white / warm cream */
+  display: flex;
+  align-items: center;  /* Vertically center content — prevents bottom cutoff */
+  overflow: hidden;
+}
+
+/* ---- DOT NAVIGATION (bottom-left) ---- */
+.joby-dots {
+  position: absolute;
+  left: 2.5rem;
+  bottom: 5vh;         /* Anchored near bottom, NOT centered */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 10;
+  opacity: 0;          /* Starts hidden, animated in by GSAP */
+}
+
+.joby-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C5C0B8;
+  transition: all 0.35s ease;
+}
+
+.joby-dot.active {
+  width: 2px;
+  height: 22px;
+  border-radius: 1px;
+  background: #1a1a1a;
+}
+
+/* ---- IMAGE CONTAINER ---- */
+.joby-image-wrap {
+  position: relative;
+  width: 49%;
+  height: 78vh;        /* Explicit height — image fills most of viewport */
+  margin: 0 0 0 5%;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* All images fill the container absolutely */
+.joby-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: clip-path;
+}
+
+/* Base image (slide 0) — always visible, bottom of stack */
+.joby-img-base {
+  z-index: 1;
+}
+
+/* Layer images — initially hidden via clip-path, GSAP reveals top-to-bottom */
+.joby-img-layer[data-index="1"] { z-index: 2; clip-path: inset(100% 0 0 0); }
+.joby-img-layer[data-index="2"] { z-index: 3; clip-path: inset(100% 0 0 0); }
+.joby-img-layer[data-index="3"] { z-index: 4; clip-path: inset(100% 0 0 0); }
+
+/* ---- TEXT AREA (right side) ---- */
+.joby-text-area {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  padding: 0 3rem 0 0;
+  margin-left: 5%;            /* Gap between image and text zone */
+  height: 78vh;               /* Match image height */
+}
+
+/* Category label stack — LEFT of the vertical line */
+.joby-category-stack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: right;
+  width: 4rem;
+}
+
+.joby-cat-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+/* Vertical decorative line — grows from top via scaleY */
+.joby-vert-line {
+  position: absolute;
+  left: 5rem;
+  top: 0;
+  width: 2px;
+  height: 55%;
+  background: #999;
+  transform-origin: top center;
+  transform: scaleY(0);
+  will-change: transform;
+}
+
+/* Text panels container */
+.joby-text-panels {
+  position: relative;
+  flex: 1;
+  margin-left: 7rem;
+  height: 100%;
+}
+
+/* Individual text panel — stacked absolutely */
+.joby-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* Headline top, body bottom — massive gap */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.joby-panel[data-slide="0"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Headline */
+.joby-h {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.7rem);
+  font-weight: 400; /* KEY: light/regular, NOT bold */
+  color: #1a1a1a;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 420px;
+  will-change: transform, opacity;
+}
+
+/* Body text */
+.joby-p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.6;
+  max-width: 400px;
+  will-change: transform, opacity;
+}
+
+/* ---- JOBY RESPONSIVE ---- */
+@media (max-width: 1023px) {
+  .joby-image-wrap { width: 45%; margin-left: 3%; }
+  .joby-dots { left: 1.5rem; }
+  .joby-h { font-size: clamp(1.4rem, 2.5vw, 2rem); }
+}
+
+@media (max-width: 767px) {
+  .joby-scroll-spacer { height: auto; }
+  .joby-pinned {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 3rem 1.5rem;
+  }
+  .joby-image-wrap {
+    width: 100%;
+    height: 50vh;
+    margin: 0 0 2rem 0;
+  }
+  .joby-text-area {
+    padding: 0;
+    margin-left: 0;
+    height: auto;
+  }
+  .joby-vert-line { display: none; }
+  .joby-category {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    text-align: left;
+    margin-bottom: 1rem;
+    opacity: 1;
+  }
+  .joby-text-panels {
+    margin-left: 0;
+    position: relative;
+    min-height: 200px;
+  }
+  .joby-panel {
+    position: relative;
+    display: none;
+  }
+  .joby-panel[data-slide="0"] {
+    display: flex;
+  }
+  .joby-dots { display: none; }
+}

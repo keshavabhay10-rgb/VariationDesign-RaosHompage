@@ -1,0 +1,36 @@
+FILE LIST — raos-website-new
+Generated: 2026-03-26
+============================================================
+
+src/app/
+  page.tsx                  ← Home page (assembles all home sections)
+  layout.tsx                ← Root layout (Navbar, Footer, FloatingCTA)
+  globals.css               ← Global styles, Tailwind base, custom CSS
+  favicon.ico
+  about/page.tsx
+  blog/page.tsx
+  contact/page.tsx
+  events/page.tsx
+  gallery/page.tsx
+  menu/page.tsx
+  reservations/page.tsx
+
+src/components/home/
+  HeroSection.tsx           ← GSAP scroll portal animation + fire video
+  WelcomeSection.tsx        ← Word-reveal headline + 4 pillar cards
+  SizzlerSection.tsx        ← Pinned sizzler plate scroll + sound toggle
+  MenuHighlights.tsx        ← 3 dish cards (Butter Chicken, Biryani, Paneer)
+  ReviewsSection.tsx        ← 3 Google/TripAdvisor review cards
+  EventsTeaser.tsx          ← Parallax full-bleed events CTA section
+  ContactSection.tsx        ← Address / hours / embedded Google Map
+
+src/components/layout/
+  Navbar.tsx                ← Fixed nav, scroll shrink, mobile hamburger
+  Footer.tsx                ← Logo, copyright, Facebook + Instagram icons
+  FloatingCTA.tsx           ← "Book a Table" pill, appears after #menu section
+
+src/components/ui/
+  SoundToggle.tsx           ← Mute/unmute button used in SizzlerSection
+
+Other relevant config:
+  tailwind.config.ts        ← Custom colours, fonts, keyframe animations

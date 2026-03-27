@@ -1,0 +1,3116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rao's Bar &amp; Restaurant | Indian Fusion Dalston</title>
+  <meta name="description" content="Where tradition meets modern flavours. Premium Indian fusion dining &amp; cocktail bar in Dalston, London.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Bluu Next + Truculenta — Section 2 hero fonts -->
+  <style>
+    @font-face {
+      font-family: 'Bluu Next';
+      src: url('../Assets/Fonts/BluuNext-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Truculenta';
+      src: url('../Assets/Fonts/Truculenta-VariableFont_opsz,wdth,wght.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+
+  <style>
+    /* ===== CSS VARIABLES (Prototype — Design System) ===== */
+    :root {
+      --bg-primary: #0D0D0D;
+      --bg-secondary: #1A1A1A;
+      --bg-card: #2D2D2D;
+      --gold: #C9963B;
+      --gold-light: #D4A843;
+      --copper: #B87333;
+      --text-primary: #F5F0EB;
+      --text-secondary: #A0978E;
+      --ember: rgba(232, 118, 42, 0.1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ===== LOADER ===== */
+    .loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg-primary);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      animation: loaderPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes loaderPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav.scrolled {
+      background: rgba(13, 13, 13, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 0.75rem 2rem;
+      border-bottom: 1px solid rgba(201, 150, 59, 0.15);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+    }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; cursor: pointer;
+      width: 28px; height: 20px;
+      position: relative; z-index: 200;
+    }
+    .hamburger span {
+      display: block; width: 100%; height: 2px;
+      background: var(--text-primary);
+      position: absolute; left: 0;
+      transition: all 0.3s ease;
+    }
+    .hamburger span:nth-child(1) { top: 0; }
+    .hamburger span:nth-child(2) { top: 9px; }
+    .hamburger span:nth-child(3) { top: 18px; }
+    .hamburger.active span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 150;
+      background: rgba(13, 13, 13, 0.97);
+      backdrop-filter: blur(30px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2rem;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .mobile-menu.active { opacity: 1; visibility: visible; }
+    .mobile-menu a {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+
+    /* ===== FLOATING CTA ===== */
+    .floating-cta {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
+      z-index: 90;
+      background: var(--gold);
+      color: var(--bg-primary);
+      font-family: var(--font-body);
+      font-weight: 600; font-size: 0.85rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.9rem 2.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 30px rgba(201, 150, 59, 0.35);
+      transition: all 0.4s ease;
+      display: flex; align-items: center; gap: 0.6rem;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .floating-cta.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .floating-cta:hover {
+      background: var(--gold-light);
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 8px 40px rgba(201, 150, 59, 0.5);
+    }
+    .floating-cta svg { width: 16px; height: 16px; }
+
+    /* ===== SOUND TOGGLE ===== */
+    .sound-toggle {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 90;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(45, 45, 45, 0.8);
+      border: 1px solid rgba(201, 150, 59, 0.3);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0; visibility: hidden;
+    }
+    .sound-toggle.visible { opacity: 1; visibility: visible; }
+    .sound-toggle:hover { border-color: var(--gold); background: rgba(45, 45, 45, 0.95); }
+    .sound-toggle svg { width: 18px; height: 18px; fill: var(--text-secondary); transition: fill 0.3s; }
+    .sound-toggle.active svg { fill: var(--gold); }
+    .sound-prompt {
+      position: fixed; bottom: 5rem; right: 1rem; z-index: 90;
+      font-size: 0.7rem; color: var(--text-secondary);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.5s;
+      white-space: nowrap;
+    }
+    .sound-prompt.visible { opacity: 1; }
+
+    /* ===== HERO SECTION ===== */
+    .hero-container {
+      height: 300vh;
+      position: relative;
+    }
+    .hero {
+      position: relative;
+      width: 100%; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background: var(--bg-primary);
+    }
+
+    /* Background fire video (behind the frame) */
+    .hero-fire-bg {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse at 50% 80%, rgba(232, 118, 42, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 70%, rgba(201, 150, 59, 0.4) 0%, transparent 45%),
+        radial-gradient(ellipse at 70% 75%, rgba(184, 115, 51, 0.35) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 60%, rgba(139, 69, 19, 0.3) 0%, transparent 55%),
+        linear-gradient(to top, #1a0800 0%, #0D0D0D 60%);
+      animation: fireGlow 4s ease-in-out infinite alternate;
+    }
+    @keyframes fireGlow {
+      0% { background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%; }
+      33% { background-size: 110% 105%, 95% 110%, 105% 95%, 100% 108%, 100% 100%; }
+      66% { background-size: 95% 108%, 108% 95%, 92% 110%, 105% 100%, 100% 100%; }
+      100% { background-size: 105% 102%, 100% 105%, 110% 100%, 98% 105%, 100% 100%; }
+    }
+    .hero-fire-bg video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    .hero-fire-bg::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 2;
+      background: radial-gradient(ellipse at center, rgba(13,13,13,0.45) 0%, rgba(13,13,13,0.55) 60%, rgba(13,13,13,0.7) 100%);
+    }
+    /* Ember particles */
+    .hero-fire-bg .embers {
+      position: absolute; inset: 0; z-index: 3;
+      pointer-events: none;
+      background-image:
+        radial-gradient(1px 1px at 20% 60%, rgba(255,180,50,0.8) 50%, transparent 100%),
+        radial-gradient(1px 1px at 40% 45%, rgba(255,150,30,0.6) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 60% 55%, rgba(255,200,80,0.7) 50%, transparent 100%),
+        radial-gradient(1px 1px at 80% 50%, rgba(255,160,40,0.5) 50%, transparent 100%),
+        radial-gradient(1px 1px at 35% 70%, rgba(255,140,20,0.6) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 65% 65%, rgba(255,180,60,0.5) 50%, transparent 100%);
+      background-size: 100% 100%;
+      animation: embersFloat 6s ease-in-out infinite;
+    }
+    @keyframes embersFloat {
+      0% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(-30px); opacity: 1; }
+      100% { transform: translateY(-60px); opacity: 0; }
+    }
+
+    /* Portal frame */
+    .hero-portal {
+      position: relative;
+      width: 340px; height: 460px;
+      border: 3px solid var(--gold);
+      border-radius: 170px 170px 12px 12px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(201, 150, 59, 0.2), inset 0 0 30px rgba(201, 150, 59, 0.1);
+      z-index: 2;
+    }
+    .hero-portal::before {
+      content: '';
+      position: absolute; inset: -6px;
+      border: 1px solid rgba(201, 150, 59, 0.3);
+      border-radius: 176px 176px 18px 18px;
+      pointer-events: none;
+    }
+    .hero-portal video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-portal::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center bottom, rgba(232, 118, 42, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Hero text layers */
+    .hero-text-left {
+      position: absolute; left: 5%; top: 50%; transform: translateY(-50%);
+      z-index: 3;
+    }
+    .hero-text-left h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--text-primary);
+    }
+    .hero-text-left h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-text-right {
+      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      z-index: 3; text-align: right;
+    }
+    .hero-text-right h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3.5vw, 3.5rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+    .hero-text-right h2 span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Scroll prompt */
+    .scroll-prompt {
+      position: absolute; bottom: 6rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 5; text-align: center;
+    }
+    .scroll-prompt p {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    .scroll-chevron {
+      width: 20px; height: 20px;
+      margin: 0 auto;
+      border-right: 1.5px solid var(--gold);
+      border-bottom: 1.5px solid var(--gold);
+      transform: rotate(45deg);
+      animation: chevronBounce 2s ease-in-out infinite;
+    }
+    @keyframes chevronBounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.5; }
+      50% { transform: rotate(45deg) translateY(6px); opacity: 1; }
+    }
+
+    /* Post-portal brand reveal */
+    .hero-brand-reveal {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      z-index: 5; text-align: center;
+      opacity: 0;
+      padding: 3rem 4rem;
+      background: radial-gradient(ellipse at center, rgba(13, 13, 13, 0.75) 0%, rgba(13, 13, 13, 0.5) 50%, transparent 80%);
+      border-radius: 20px;
+    }
+    .hero-brand-reveal .brand-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+    }
+    .hero-brand-reveal .brand-sub {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: #FFFFFF;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+    }
+    .hero-brand-reveal .brand-divider {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 0 auto 1.5rem;
+      opacity: 0.6;
+    }
+    .hero-brand-reveal .brand-location {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #D4CFC8;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+    }
+    .hero-brand-reveal .brand-tandoor {
+      margin-top: 2rem;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ===== SECTION: WELCOME ===== */
+    .section-welcome {
+      position: relative;
+      padding: 8rem 2rem;
+      background: var(--bg-primary);
+      overflow: hidden;
+    }
+    .section-welcome::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 80px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    .welcome-statement {
+      max-width: 900px; margin: 0 auto;
+      text-align: center;
+    }
+    .welcome-statement h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .welcome-statement h2 .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    .welcome-statement .tagline {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 3rem;
+      opacity: 0;
+    }
+    .welcome-desc {
+      font-size: 1rem; line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 650px; margin: 0 auto 4rem;
+      opacity: 0;
+    }
+
+    /* 4 Pillars */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      max-width: 1000px; margin: 0 auto;
+    }
+    .pillar {
+      text-align: center;
+      padding: 2rem 1rem;
+      border: 1px solid rgba(201, 150, 59, 0.15);
+      border-radius: 8px;
+      background: rgba(45, 45, 45, 0.3);
+      opacity: 0; transform: translateY(30px);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .pillar:hover {
+      border-color: rgba(201, 150, 59, 0.4);
+      background: rgba(45, 45, 45, 0.5);
+    }
+    .pillar-icon {
+      width: 48px; height: 48px; margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: rgba(201, 150, 59, 0.1);
+    }
+    .pillar-icon svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .pillar h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .pillar p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===== SECTION: SIZZLER RISE ===== */
+    .sizzler-container {
+      height: 400vh;
+      position: relative;
+    }
+    .sizzler-section {
+      position: relative;
+      width: 100%; height: 100vh;
+      background: var(--bg-secondary);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sizzler-bg-gradient {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center bottom, rgba(201, 150, 59, 0.08) 0%, transparent 60%);
+    }
+    .sizzler-text-left {
+      position: absolute; left: 5%; top: 22%;
+      z-index: 3;
+    }
+    .sizzler-text-left h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5.5vw, 5rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      opacity: 0.15;
+    }
+    .sizzler-text-right {
+      position: absolute; right: 5%; top: 22%;
+      text-align: right; z-index: 3;
+    }
+    .sizzler-text-right h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5.5vw, 5rem);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--gold);
+      opacity: 0.15;
+    }
+    .sizzler-plate {
+      position: relative; z-index: 5;
+      width: 380px; height: auto;
+      max-height: 80vh;
+      overflow: visible;
+      background-color: #1A1A1A;
+      border-radius: 8px;
+      filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 80px rgba(201, 150, 59, 0.12));
+    }
+    .sizzler-plate img, .sizzler-plate video {
+      width: 100%; height: auto;
+      display: block;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    @keyframes sizzlerFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .sizzler-steam-container {
+      position: absolute; z-index: 6;
+      width: 340px; height: 300px;
+      left: 50%; top: 15%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      opacity: 0;
+    }
+    .steam-wisp {
+      position: absolute;
+      width: 60px;
+      height: 120px;
+      background: linear-gradient(to top, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, transparent 100%);
+      filter: blur(12px);
+      border-radius: 50%;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+    .steam-wisp:nth-child(1) { left: 30%; animation: wisp1 3.5s 0s infinite; }
+    .steam-wisp:nth-child(2) { left: 50%; animation: wisp2 4s 0.5s infinite; }
+    .steam-wisp:nth-child(3) { left: 70%; animation: wisp3 3s 1s infinite; }
+    .steam-wisp:nth-child(4) { left: 40%; animation: wisp1 4.5s 1.5s infinite; }
+    .steam-wisp:nth-child(5) { left: 60%; animation: wisp2 3.2s 0.8s infinite; }
+    @keyframes wisp1 {
+      0% { transform: translateY(0) scaleX(1); opacity: 0; }
+      20% { opacity: 0.6; }
+      100% { transform: translateY(-150px) scaleX(1.8) rotate(-10deg); opacity: 0; }
+    }
+    @keyframes wisp2 {
+      0% { transform: translateY(0) scaleX(1); opacity: 0; }
+      25% { opacity: 0.5; }
+      100% { transform: translateY(-170px) scaleX(2) rotate(8deg); opacity: 0; }
+    }
+    @keyframes wisp3 {
+      0% { transform: translateY(0) scaleX(1); opacity: 0; }
+      15% { opacity: 0.4; }
+      100% { transform: translateY(-130px) scaleX(1.5) rotate(-5deg); opacity: 0; }
+    }
+
+    .dish-specs {
+      position: absolute; z-index: 6;
+      opacity: 0;
+    }
+    .dish-specs-left { left: 5%; bottom: 12%; max-width: 280px; transform: translateY(20px); }
+    .dish-specs-right { right: 5%; bottom: 12%; text-align: right; max-width: 280px; transform: translateY(20px); }
+    .dish-specs h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .dish-specs p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+    .dish-specs .spice-tags {
+      display: flex; gap: 0.5rem; margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .dish-specs-right .spice-tags { justify-content: flex-end; }
+    .spice-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid rgba(201, 150, 59, 0.3);
+      border-radius: 20px;
+      color: var(--gold);
+    }
+
+    /* ===== SECTION: MENU HIGHLIGHTS ===== */
+    .section-menu {
+      padding: 8rem 2rem;
+      background: var(--bg-primary);
+      position: relative;
+    }
+    .section-title {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .section-title .label {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .section-title h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .menu-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+      opacity: 0; transform: translateY(40px);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .menu-card-img {
+      height: 220px;
+      overflow: hidden;
+    }
+    .menu-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .menu-card:hover .menu-card-img img { transform: scale(1.05); }
+    .menu-card-body { padding: 1.5rem; }
+    .menu-card-body .category {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .menu-card-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem; font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .menu-card-body p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .menu-card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .menu-card-price {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 600;
+      color: var(--gold);
+    }
+    .menu-card-tags { display: flex; gap: 0.4rem; }
+    .menu-card-tags span {
+      font-size: 0.6rem; letter-spacing: 0.08em;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid rgba(201, 150, 59, 0.25);
+      border-radius: 4px;
+      color: var(--gold);
+    }
+    .menu-cta {
+      text-align: center; margin-top: 3rem;
+    }
+    .btn-outline {
+      display: inline-block;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 0.9rem 2.5rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+      background: var(--gold);
+      color: var(--bg-primary);
+    }
+
+    /* ===== SECTION: REVIEWS ===== */
+    .section-reviews {
+      padding: 8rem 2rem;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-reviews::before {
+      content: '\201C';
+      position: absolute; top: 2rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-display);
+      font-size: 15rem; color: rgba(201, 150, 59, 0.04);
+      line-height: 1;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .review-card {
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 8px;
+      background: rgba(13, 13, 13, 0.5);
+      opacity: 0; transform: translateY(30px);
+    }
+    .review-stars {
+      display: flex; gap: 3px; margin-bottom: 1rem;
+    }
+    .review-stars svg { width: 16px; height: 16px; fill: var(--gold); }
+    .review-card blockquote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .review-author {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+    .review-source {
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+
+    /* ===== SECTION: EVENTS ===== */
+    .section-events {
+      position: relative;
+      padding: 0;
+      height: 80vh;
+      min-height: 550px;
+      overflow: hidden;
+      display: flex; align-items: center;
+    }
+    .events-bg {
+      position: absolute; inset: 0;
+    }
+    .events-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .events-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.6) 50%, rgba(13,13,13,0.3) 100%);
+    }
+    .events-content {
+      position: relative; z-index: 2;
+      padding: 4rem;
+      max-width: 550px;
+    }
+    .events-content .label {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .events-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+    }
+    .events-content p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .events-tags {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+    .events-tags span {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border: 1px solid rgba(201, 150, 59, 0.3);
+      border-radius: 20px;
+      color: var(--gold);
+    }
+
+    /* ===== SECTION: CONTACT ===== */
+    .section-contact {
+      padding: 6rem 2rem;
+      background: var(--bg-primary);
+      position: relative;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .contact-info h2 {
+      font-family: var(--font-display);
+      font-size: 2rem; font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+    }
+    .contact-item {
+      display: flex; gap: 1rem; margin-bottom: 1.5rem;
+      align-items: flex-start;
+    }
+    .contact-icon {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(201, 150, 59, 0.1);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-icon svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .contact-item .contact-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+    .contact-item .contact-value {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .contact-hours {
+      margin-top: 2rem;
+    }
+    .contact-hours h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .hours-row {
+      display: flex; justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.85rem;
+    }
+    .hours-row .day { color: var(--text-secondary); }
+    .hours-row .time { color: var(--text-primary); }
+    .contact-map {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+      min-height: 400px;
+      background: var(--bg-card);
+    }
+    .contact-map iframe {
+      width: 100%; height: 100%; min-height: 400px;
+      border: 0;
+      filter: grayscale(0.8) brightness(0.7) contrast(1.1);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 3rem 2rem;
+      background: var(--bg-secondary);
+      border-top: 1px solid rgba(201, 150, 59, 0.1);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+    }
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .footer-socials { display: flex; gap: 1rem; }
+    .footer-socials a {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s;
+    }
+    .footer-socials a:hover { border-color: var(--gold); }
+    .footer-socials a svg { width: 16px; height: 16px; fill: var(--text-secondary); transition: fill 0.3s; }
+    .footer-socials a:hover svg { fill: var(--gold); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1023px) {
+      .nav-links { display: none; }
+      .hamburger { display: block; }
+      .hero-text-left h1 { font-size: clamp(1.8rem, 4vw, 3rem); }
+      .hero-text-right h2 { font-size: clamp(1.2rem, 3vw, 2.5rem); }
+      .hero-portal { width: 280px; height: 380px; border-radius: 140px 140px 10px 10px; }
+      .pillars { grid-template-columns: repeat(2, 1fr); }
+      .sizzler-plate { width: 320px; }
+      .sizzler-text-left h2, .sizzler-text-right h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
+      .dish-specs-left, .dish-specs-right { display: none; }
+      .menu-grid { grid-template-columns: repeat(2, 1fr); }
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+      .reviews-grid .review-card:nth-child(3) { display: none; }
+      .events-content { padding: 3rem; }
+    }
+
+    @media (max-width: 767px) {
+      .hero-container { height: 100vh; }
+      .hero-text-left { left: 50%; transform: translate(-50%, -50%); top: 18%; text-align: center; width: 90%; }
+      .hero-text-right { right: 50%; transform: translate(50%, -50%); top: auto; bottom: 20%; text-align: center; width: 90%; left: 50%; transform: translate(-50%, 0); position: absolute; }
+      .hero-portal { width: 200px; height: 280px; border-radius: 100px 100px 8px 8px; }
+      .hero-portal::before { border-radius: 106px 106px 14px 14px; }
+      .scroll-prompt { display: none; }
+      .section-welcome { padding: 5rem 1.5rem; }
+      .pillars { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .pillar { padding: 1.5rem 0.75rem; }
+      .sizzler-container { height: 100vh; }
+      .sizzler-text-left, .sizzler-text-right { display: none; }
+      .sizzler-plate { width: 200px; }
+      .menu-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .reviews-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+      .reviews-grid .review-card:nth-child(3) { display: block; }
+      .section-events { height: auto; min-height: auto; }
+      .events-overlay { background: rgba(13,13,13,0.88); }
+      .events-content { padding: 4rem 1.5rem; max-width: 100%; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .floating-cta.visible {
+        bottom: 0; left: 0; right: 0;
+        transform: none;
+        border-radius: 0;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 1;
+      }
+      .floating-cta.visible:hover { transform: none; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+
+    /* ===== NOISE TEXTURE OVERLAY ===== */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9998;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* =====================================================
+       SECTION 3: QH 3D CARD GALLERY — Scoped styles
+       ===================================================== */
+
+    .qh-container {
+      height: 500vh;
+      position: relative;
+    }
+
+    .qh-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: #B8B8B8;
+    }
+
+    .qh-environment {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(160,160,165,0.8) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 60%, rgba(140,140,145,0.6) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 80%, rgba(120,120,125,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 70% 20%, rgba(170,170,175,0.4) 0%, transparent 40%),
+        linear-gradient(135deg, #AEAEB2 0%, #C8C8CC 25%, #B0B0B4 50%, #BCBCC0 75%, #A8A8AC 100%);
+      filter: contrast(1.05);
+    }
+
+    .qh-environment::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      pointer-events: none;
+    }
+
+    .qh-cards-perspective {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      perspective: 1200px;
+      perspective-origin: 50% 45%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qh-cards-track {
+      position: relative;
+      display: flex;
+      align-items: center;
+      transform-style: preserve-3d;
+      width: 100%;
+      height: 100%;
+    }
+
+    .qh-card {
+      position: absolute;
+      width: 540px;
+      height: 370px;
+      border-radius: 10px;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform, opacity, filter;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,0.25),
+        0 10px 20px rgba(0,0,0,0.15);
+      left: 50%;
+      top: 50%;
+      margin-left: -270px;
+      margin-top: -185px;
+      opacity: 0;
+    }
+
+    .qh-card-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+
+    .qh-card-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .qh-meta {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 1.5rem 2.5rem 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      background: linear-gradient(to top, rgba(184,184,184,0.95) 0%, rgba(184,184,184,0.6) 60%, transparent 100%);
+    }
+
+    .qh-meta-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .qh-meta-name {
+      font-family: var(--font-body);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .qh-meta-arrow {
+      color: #1a1a1a;
+      transition: transform 0.3s;
+    }
+    .qh-meta-title:hover .qh-meta-arrow {
+      transform: translate(2px, -2px);
+    }
+
+    .qh-meta-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .qh-meta-label {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .qh-meta-value {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #1a1a1a;
+      transition: opacity 0.25s ease;
+    }
+
+    .qh-meta-year {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #1a1a1a;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1023px) {
+      .qh-card {
+        width: 420px;
+        height: 290px;
+        margin-left: -210px;
+        margin-top: -145px;
+      }
+      .qh-meta {
+        padding: 1rem 1.5rem 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .qh-meta-col:nth-child(n+4) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .qh-container {
+        height: auto;
+      }
+      .qh-section {
+        height: auto;
+        padding: 4rem 0;
+      }
+      .qh-cards-perspective {
+        position: relative;
+        perspective: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        align-items: center;
+        padding: 2rem 1rem;
+        gap: 1.5rem;
+      }
+      .qh-cards-track {
+        display: flex;
+        gap: 1.5rem;
+        position: relative;
+        width: auto;
+      }
+      .qh-card {
+        position: relative;
+        width: 85vw;
+        height: 55vw;
+        flex-shrink: 0;
+        scroll-snap-align: center;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        left: auto;
+        top: auto;
+        margin: 0;
+      }
+      .qh-meta {
+        position: relative;
+        flex-direction: column;
+        align-items: flex-start;
+        background: none;
+        padding: 1.5rem;
+      }
+      .qh-meta-col {
+        display: flex !important;
+      }
+    }
+
+    /* =====================================================
+       SECTION 4: OUR PHILOSOPHY (Joby Aviation) — v4
+       ===================================================== */
+
+    .joby-outer {
+      position: relative;
+    }
+
+    .joby-scroll-spacer {
+      height: 500vh;
+      position: relative;
+    }
+
+    .joby-pinned {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: #F5F2EC;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .joby-dots {
+      position: absolute;
+      left: 2.5rem;
+      bottom: 5vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      z-index: 10;
+      opacity: 0;
+    }
+
+    .joby-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #C5C0B8;
+      transition: all 0.35s ease;
+    }
+
+    .joby-dot.active {
+      width: 2px;
+      height: 22px;
+      border-radius: 1px;
+      background: #1a1a1a;
+    }
+
+    .joby-image-wrap {
+      position: relative;
+      width: 49%;
+      height: 78vh;
+      margin: 0 0 0 5%;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .joby-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: clip-path;
+    }
+
+    .joby-img-base { z-index: 1; }
+    .joby-img-layer[data-index="1"] { z-index: 2; clip-path: inset(100% 0 0 0); }
+    .joby-img-layer[data-index="2"] { z-index: 3; clip-path: inset(100% 0 0 0); }
+    .joby-img-layer[data-index="3"] { z-index: 4; clip-path: inset(100% 0 0 0); }
+
+    .joby-text-area {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      padding: 0 3rem 0 0;
+      margin-left: 5%;
+      height: 78vh;
+      min-width: 0;
+      overflow: visible;
+    }
+
+    .joby-category-stack {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5.5rem;
+      z-index: 5;
+    }
+
+    .joby-cat-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      letter-spacing: 0.03em;
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    .joby-vert-line {
+      position: absolute;
+      left: 6rem;
+      top: 0;
+      width: 2px;
+      height: 55%;
+      background: #999;
+      transform-origin: top center;
+      transform: scaleY(0);
+      will-change: transform;
+    }
+
+    .joby-text-panels {
+      position: relative;
+      flex: 1;
+      margin-left: 8rem;
+      height: 100%;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .joby-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .joby-panel[data-slide="0"] {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .joby-h {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 2.8vw, 2.7rem);
+      font-weight: 400;
+      color: #1a1a1a;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      max-width: 420px;
+      will-change: transform, opacity;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .joby-p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: #666;
+      line-height: 1.6;
+      max-width: 400px;
+      will-change: transform, opacity;
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 1023px) {
+      .joby-image-wrap { width: 45%; margin-left: 3%; }
+      .joby-dots { left: 1.5rem; }
+      .joby-h { font-size: clamp(1.4rem, 2.5vw, 2rem); }
+    }
+
+    @media (max-width: 767px) {
+      .joby-scroll-spacer { height: auto; }
+      .joby-pinned {
+        height: auto;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 3rem 1.5rem;
+      }
+      .joby-image-wrap {
+        width: 100%;
+        height: 50vh;
+        margin: 0 0 2rem 0;
+      }
+      .joby-text-area {
+        padding: 0;
+        margin-left: 0;
+        height: auto;
+      }
+      .joby-vert-line { display: none; }
+      .joby-category-stack {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: auto;
+        text-align: left;
+        margin-bottom: 1rem;
+      }
+      .joby-cat-label[data-cat="0"] {
+        position: relative;
+        opacity: 1;
+        white-space: normal;
+      }
+      .joby-text-panels {
+        margin-left: 0;
+        position: relative;
+        min-height: 200px;
+      }
+      .joby-panel {
+        position: relative;
+        display: none;
+      }
+      .joby-panel[data-slide="0"] {
+        display: flex;
+      }
+      .joby-dots { display: none; }
+    }
+
+    /* ---- Section 4 forced initial states ---- */
+    .joby-pinned .joby-vert-line  { transform: scaleY(0); }
+    .joby-pinned .joby-cat-label  { opacity: 0; }
+    .joby-pinned .joby-dots       { opacity: 0; }
+    .joby-pinned .joby-panel      { opacity: 0; pointer-events: none; }
+    .joby-pinned .joby-panel[data-slide="0"] { opacity: 1; pointer-events: auto; }
+
+    /* ─── SECTION 2: HERO SCROLL ─── */
+
+    #section-2-hero {
+      position: relative;
+      height: 1480vh;
+      background: #0D0D0D;
+    }
+
+    .s2-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .s2-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    .s2-copy-overlay {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      height: 100%;
+      padding: clamp(24px, 5vw, 80px);
+      pointer-events: none;
+    }
+
+    .s2-copy-1-group {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+    }
+
+    .s2-copy-1-left {
+      position: absolute;
+      left: clamp(40px, 5vw, 80px);
+      top: 38%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      max-width: 420px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .s2-copy-1-left.s2-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .s2-copy-1-right {
+      position: absolute;
+      right: clamp(40px, 5vw, 80px);
+      top: 38%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      max-width: 360px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
+    }
+
+    .s2-copy-1-right.s2-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .s2-copy-2-part-a,
+    .s2-copy-2-part-b {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, calc(-50% + 30px));
+      text-align: center;
+      opacity: 0;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .s2-copy-3 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      opacity: 0;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .s2-copy-3 .s2-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(40px) rotateX(-10deg);
+    }
+
+    .s2-scroll-indicator {
+      position: absolute;
+      bottom: clamp(24px, 4vh, 48px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .s2-scroll-indicator-text {
+      font-family: 'Truculenta', 'Playfair Display', sans-serif;
+      font-size: clamp(0.65rem, 1vw, 0.75rem);
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: rgba(255, 248, 240, 0.55);
+      text-transform: uppercase;
+    }
+
+    .s2-scroll-indicator-line-wrap {
+      width: 1px;
+      height: 40px;
+      background: rgba(201, 163, 110, 0.2);
+      overflow: hidden;
+    }
+
+    .s2-scroll-indicator-line {
+      width: 100%;
+      height: 100%;
+      background: #C9A96E;
+      animation: s2ScrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes s2ScrollLine {
+      0%   { transform: scaleY(0); transform-origin: top; }
+      50%  { transform: scaleY(1); transform-origin: top; }
+      50.1%{ transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    .s2-gold-divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      width: clamp(100px, 16vw, 240px);
+    }
+
+    .s2-gold-divider::before {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, #C9A96E 0%, rgba(201, 169, 110, 0.3) 100%);
+    }
+
+    .s2-gold-divider .s2-diamond {
+      width: 5px;
+      height: 5px;
+      background: #C9A96E;
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .s2-gold-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(201, 169, 110, 0.3) 0%, #C9A96E 100%);
+    }
+
+    .s2-gold-divider-right {
+      margin-left: auto;
+      flex-direction: row-reverse;
+    }
+
+    .s2-headline {
+      font-family: 'Bluu Next', 'Playfair Display', serif;
+      font-weight: 700;
+      color: #FFF8F0;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+
+    .s2-subline {
+      font-family: 'Truculenta', 'Playfair Display', sans-serif;
+      font-weight: 300;
+      color: rgba(255, 248, 240, 0.65);
+      line-height: 1.5;
+      letter-spacing: 0.05em;
+    }
+
+    .s2-gold-text {
+      color: #C9A96E;
+    }
+
+    .s2-tag {
+      font-family: 'Truculenta', sans-serif;
+      font-size: clamp(0.65rem, 1vw, 0.75rem);
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #C9A96E;
+    }
+
+    /* ===== NAVBAR AUTO-HIDE ===== */
+    .nav {
+      transition: background 0.4s ease, padding 0.4s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav.nav-hidden {
+      transform: translateY(-100%);
+    }
+    .nav.nav-visible {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div class="loader" id="loader">
+    <span class="loader-text">RAO'S</span>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">Rao's</a>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#menu">Menu</a>
+      <a href="#about">About</a>
+      <a href="#reservations">Reservations</a>
+      <a href="#events">Events</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#blog">Blog</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home">Home</a>
+    <a href="#menu">Menu</a>
+    <a href="#about">About</a>
+    <a href="#reservations">Reservations</a>
+    <a href="#events">Events</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <!-- FLOATING CTA -->
+  <a href="#reservations" class="floating-cta" id="floatingCta">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 4H5a2 2 0 00-2 2v14l4-4h12a2 2 0 002-2V6a2 2 0 00-2-2z"/></svg>
+    Book a Table
+  </a>
+
+  <!-- SOUND TOGGLE -->
+  <div class="sound-toggle" id="soundToggle">
+    <svg id="soundOff" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>
+    <svg id="soundOn" viewBox="0 0 24 24" style="display:none"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+  </div>
+  <div class="sound-prompt" id="soundPrompt">Turn on sound for the full experience</div>
+
+  <!-- ===================== SECTION 1: HERO (Tandoor Rao's) ===================== -->
+  <!-- SOURCE: Rao's Prototype HTML v1 — COPIED VERBATIM, DO NOT MODIFY -->
+  <section class="hero-container" id="home">
+    <div class="hero" id="hero">
+      <!-- Fire background (revealed on portal expansion) -->
+      <div class="hero-fire-bg" id="heroFireBg">
+        <video autoplay muted loop playsinline id="fireBgVideo">
+          <source src="../Assets/Tandoor-fire-section1.mp4" type="video/mp4">
+        </video>
+        <div class="embers"></div>
+      </div>
+
+      <!-- Portal frame -->
+      <div class="hero-portal" id="heroPortal">
+        <video autoplay muted loop playsinline>
+          <source src="../Assets/Tandoor-fire-section1.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Text layers -->
+      <div class="hero-text-left" id="heroTextLeft">
+        <h1>Where<br>Tradition<br>Meets <em>Modern</em><br>Flavours</h1>
+      </div>
+      <div class="hero-text-right" id="heroTextRight">
+        <h2>Indian <span>Fusion</span><br>Dalston</h2>
+      </div>
+
+      <!-- Scroll prompt -->
+      <div class="scroll-prompt" id="scrollPrompt">
+        <p>Scroll to begin your experience</p>
+        <div class="scroll-chevron"></div>
+      </div>
+
+      <!-- Brand reveal (after portal expands) -->
+      <div class="hero-brand-reveal" id="heroBrandReveal">
+        <span class="brand-name">Rao's Bar &amp; Restaurant</span>
+        <span class="brand-sub">Where Tradition Meets Modern Flavours</span>
+        <div class="brand-divider"></div>
+        <span class="brand-location">Indian Fusion Dining &middot; Dalston, London</span>
+        <div class="brand-tandoor">From Our Tandoor</div>
+      </div>
+    </div>
+  </section>
+  <!-- ===================== END SECTION 1 ===================== -->
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 2: HERO SCROLL SEQUENCE                           -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <section id="section-2-hero">
+    <div class="s2-sticky">
+
+      <!-- Frame sequence canvas -->
+      <canvas class="s2-canvas" id="s2Canvas"></canvas>
+
+      <!-- Copy overlay -->
+      <div class="s2-copy-overlay">
+
+        <!-- ── COPY BLOCK 1: Split layout — visible on load ── -->
+        <div class="s2-copy-1-group" id="s2Copy1">
+
+          <!-- LEFT: Big brand headline -->
+          <div class="s2-copy-1-left" id="s2Copy1Left">
+            <span class="s2-tag">Dalston, London</span>
+            <h1 class="s2-headline" style="font-size: clamp(3.5rem, 8vw, 9rem); margin-top: 16px; letter-spacing: -0.01em;">
+              RAO'S
+            </h1>
+            <div class="s2-gold-divider" style="margin-top: 20px;">
+              <span class="s2-diamond"></span>
+            </div>
+            <p class="s2-subline" style="font-size: clamp(0.85rem, 1.3vw, 1.1rem); margin-top: 18px; max-width: 320px;">
+              Where every flavour<br>tells a story.
+            </p>
+          </div>
+
+          <!-- RIGHT: Subheadline -->
+          <div class="s2-copy-1-right" id="s2Copy1Right">
+            <span class="s2-tag">Est. in tradition</span>
+            <p class="s2-headline" style="font-size: clamp(1.6rem, 3.2vw, 3.2rem); margin-top: 14px; letter-spacing: 0.02em;">
+              Authentic.<br>
+              <span class="s2-gold-text">Uncompromised.</span>
+            </p>
+            <div class="s2-gold-divider s2-gold-divider-right" style="margin-top: 18px;">
+              <span class="s2-diamond"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── COPY BLOCK 2A: "Authentic / Spices." ── -->
+        <div class="s2-copy-2-part-a" id="s2Copy2A">
+          <p class="s2-tag" style="margin-bottom: 16px;">The ingredients</p>
+          <h2 class="s2-headline" style="font-size: clamp(2.8rem, 6.5vw, 7.5rem);">
+            Authentic<br>
+            <span class="s2-gold-text">Spices.</span>
+          </h2>
+          <div class="s2-gold-divider" style="margin: 20px auto 0; justify-content: center;">
+            <span class="s2-diamond"></span>
+          </div>
+          <p class="s2-subline" style="font-size: clamp(0.9rem, 1.4vw, 1.15rem); margin-top: 20px; max-width: 480px; margin-left: auto; margin-right: auto;">
+            Sourced from across the subcontinent.<br>Ground fresh. Never compromised.
+          </p>
+        </div>
+
+        <!-- ── COPY BLOCK 2B: "Traditional / methods." ── -->
+        <div class="s2-copy-2-part-b" id="s2Copy2B">
+          <p class="s2-tag" style="margin-bottom: 16px;">The craft</p>
+          <h2 class="s2-headline" style="font-size: clamp(2.8rem, 6.5vw, 7.5rem);">
+            Traditional<br>
+            <span class="s2-gold-text">Methods.</span>
+          </h2>
+          <div class="s2-gold-divider" style="margin: 20px auto 0; justify-content: center;">
+            <span class="s2-diamond"></span>
+          </div>
+          <p class="s2-subline" style="font-size: clamp(0.9rem, 1.4vw, 1.15rem); margin-top: 20px; max-width: 480px; margin-left: auto; margin-right: auto;">
+            Slow-cooked, hand-rolled, flame-kissed.<br>The way it's always been done.
+          </p>
+        </div>
+
+        <!-- ── COPY BLOCK 3: "Royal flavors. Rooted in tradition." ── -->
+        <div class="s2-copy-3" id="s2Copy3">
+          <p class="s2-tag" style="margin-bottom: 24px;">The promise</p>
+          <h2 class="s2-headline s2-copy-3-content" style="font-size: clamp(2.4rem, 5.5vw, 6.5rem); line-height: 1.1;">
+            <span class="s2-word">Royal</span>
+            <span class="s2-word">flavors.</span>
+            <br>
+            <span class="s2-word">Rooted</span>
+            <span class="s2-word">in</span>
+            <span class="s2-word" style="color: #C9A96E;">tradition.</span>
+          </h2>
+        </div>
+
+        <!-- ── SCROLL INDICATOR ── -->
+        <div class="s2-scroll-indicator" id="s2ScrollIndicator">
+          <span class="s2-scroll-indicator-text">Scroll to begin</span>
+          <div class="s2-scroll-indicator-line-wrap">
+            <div class="s2-scroll-indicator-line"></div>
+          </div>
+        </div>
+
+      </div><!-- /.s2-copy-overlay -->
+    </div><!-- /.s2-sticky -->
+  </section>
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- END SECTION 2                                             -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+
+  <!-- ===================== SECTION 3: QH GALLERY (Quentin Hocdé Reference) ===================== -->
+  <!-- SOURCE: Newly built Section 3 — Inserted from separate build -->
+  <section class="qh-container" id="experience">
+    <div class="qh-section" id="qhSection">
+
+      <!-- 3D Environment Background -->
+      <div class="qh-environment"></div>
+
+      <!-- 3D Cards Container (perspective parent) -->
+      <div class="qh-cards-perspective">
+        <div class="qh-cards-track" id="qhTrack">
+
+          <!-- Card 1 -->
+          <div class="qh-card" data-index="0">
+            <div class="qh-card-inner">
+              <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=550&fit=crop" alt="The Menu">
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="qh-card" data-index="1">
+            <div class="qh-card-inner">
+              <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&h=550&fit=crop" alt="Cocktail Bar">
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="qh-card" data-index="2">
+            <div class="qh-card-inner">
+              <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=550&fit=crop" alt="Private Dining">
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="qh-card" data-index="3">
+            <div class="qh-card-inner">
+              <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=550&fit=crop" alt="Events">
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="qh-card" data-index="4">
+            <div class="qh-card-inner">
+              <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=550&fit=crop" alt="Our Story">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Metadata Row (fixed to bottom of pinned section) -->
+      <div class="qh-meta" id="qhMeta">
+        <div class="qh-meta-title" id="qhMetaTitle">
+          <span class="qh-meta-name">The Menu</span>
+          <svg class="qh-meta-arrow" viewBox="0 0 24 24" width="18" height="18">
+            <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <div class="qh-meta-col">
+          <span class="qh-meta-label">TYPE</span>
+          <span class="qh-meta-value" id="qhMetaType">Indian Fusion Cuisine</span>
+        </div>
+        <div class="qh-meta-col">
+          <span class="qh-meta-label">HIGHLIGHTS</span>
+          <span class="qh-meta-value" id="qhMetaHighlights">Tandoori, Biryani, Craft Cocktails</span>
+        </div>
+        <div class="qh-meta-col">
+          <span class="qh-meta-label">EXPERIENCE</span>
+          <span class="qh-meta-value" id="qhMetaExperience">Dine-in &middot; Private Events &middot; Takeaway</span>
+        </div>
+        <div class="qh-meta-year" id="qhMetaYear">EST. 2022</div>
+      </div>
+
+    </div>
+  </section>
+  <!-- ===================== END SECTION 3 ===================== -->
+
+  <!-- ===================== SECTION 4: OUR PHILOSOPHY (Joby Aviation Reference) ===================== -->
+  <!-- SOURCE: Newly built Section 4 (v4 patch applied) — Inserted from separate build -->
+  <section class="joby-outer" id="philosophy">
+    <div class="joby-scroll-spacer">
+      <div class="joby-pinned" id="jobyPinned">
+
+        <!-- Dot Navigation (bottom-left) -->
+        <div class="joby-dots" id="jobyDots">
+          <div class="joby-dot active" data-index="0"></div>
+          <div class="joby-dot" data-index="1"></div>
+          <div class="joby-dot" data-index="2"></div>
+          <div class="joby-dot" data-index="3"></div>
+        </div>
+
+        <!-- Left: Image Stack -->
+        <div class="joby-image-wrap">
+          <img class="joby-img joby-img-base" data-index="0"
+               src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=900&h=1200&fit=crop" alt="Chef at tandoor">
+          <img class="joby-img joby-img-layer" data-index="1"
+               src="https://images.unsplash.com/photo-1606923829579-0cb981a83e2e?w=900&h=1200&fit=crop" alt="Fresh ingredients">
+          <img class="joby-img joby-img-layer" data-index="2"
+               src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=900&h=1200&fit=crop" alt="Tandoor fire">
+          <img class="joby-img joby-img-layer" data-index="3"
+               src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=900&h=1200&fit=crop" alt="Cocktail preparation">
+        </div>
+
+        <!-- Right: Text Area -->
+        <div class="joby-text-area">
+          <div class="joby-category-stack">
+            <span class="joby-cat-label" data-cat="0">Our Philosophy</span>
+            <span class="joby-cat-label" data-cat="1">Our Ingredients</span>
+            <span class="joby-cat-label" data-cat="2">Our Table</span>
+            <span class="joby-cat-label" data-cat="3">Our Craft</span>
+          </div>
+          <div class="joby-vert-line"></div>
+
+          <!-- Text panels — one per slide, stacked absolutely -->
+          <div class="joby-text-panels">
+            <div class="joby-panel" data-slide="0">
+              <h2 class="joby-h">Rooted in tradition, refined by innovation</h2>
+              <p class="joby-p">Every dish at Rao's begins with respect — for the ingredients, the technique, and the centuries of culinary wisdom that inform our craft.</p>
+            </div>
+            <div class="joby-panel" data-slide="1">
+              <h2 class="joby-h">Ingredients that speak for themselves</h2>
+              <p class="joby-p">We source the finest produce, aged cheeses, and hand-selected cuts — letting quality do the work so every plate tells an honest story.</p>
+            </div>
+            <div class="joby-panel" data-slide="2">
+              <h2 class="joby-h">A table where everyone belongs</h2>
+              <p class="joby-p">From the first greeting to the last glass, Rao's is built around the belief that great food is meant to bring people closer together.</p>
+            </div>
+            <div class="joby-panel" data-slide="3">
+              <h2 class="joby-h">Crafted by hand, served with heart</h2>
+              <p class="joby-p">Our kitchen runs on intuition passed down through generations — recipes that can't be rushed, flavors that can't be replicated by shortcuts.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- ===================== END SECTION 4 ===================== -->
+
+  <!-- ===================== SECTION 5: SIZZLER RISE + REVIEWS ===================== -->
+  <!-- SOURCE: Rao's Prototype HTML v1 — COPIED VERBATIM, DO NOT MODIFY -->
+  <section class="sizzler-container" id="sizzlerContainer">
+    <div class="sizzler-section" id="sizzlerSection">
+      <div class="sizzler-bg-gradient"></div>
+
+      <div class="sizzler-text-left" id="sizzlerTextLeft">
+        <h2>Taste the</h2>
+      </div>
+      <div class="sizzler-text-right" id="sizzlerTextRight">
+        <h2>Experience</h2>
+      </div>
+
+      <div class="sizzler-plate" id="sizzlerPlate">
+        <video autoplay muted loop playsinline>
+          <source src="../Assets/Sizzler-Section5.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="sizzler-steam-container" id="sizzlerSteam">
+        <div class="steam-wisp"></div>
+        <div class="steam-wisp"></div>
+        <div class="steam-wisp"></div>
+        <div class="steam-wisp"></div>
+        <div class="steam-wisp"></div>
+      </div>
+
+      <!-- Sizzler audio -->
+      <audio id="sizzleAudio" loop preload="auto">
+        <source src="../Assets/sizzle-sound.mp3" type="audio/mpeg">
+      </audio>
+
+      <div class="dish-specs dish-specs-left" id="dishSpecsLeft">
+        <h3>Tandoori Sizzler</h3>
+        <p>Chef's signature creation. Marinated overnight in house-ground spices, charred in our tandoor, served on a cast-iron plate.</p>
+        <div class="spice-tags">
+          <span>Kashmiri Chilli</span>
+          <span>Garam Masala</span>
+        </div>
+      </div>
+      <div class="dish-specs dish-specs-right" id="dishSpecsRight">
+        <h3>Chef's Note</h3>
+        <p>This dish is a celebration of fire and flavour — the sizzle tells the story before the first bite.</p>
+        <div class="spice-tags">
+          <span>GF</span>
+          <span>Signature</span>
+          <span>£18.95</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ===================== END SECTION 5 ===================== -->
+
+  <!-- ===================== -->
+  <!-- MENU HIGHLIGHTS       -->
+  <!-- ===================== -->
+  <section class="section-menu" id="menu">
+    <div class="section-title">
+      <span class="label">Our Menu</span>
+      <h2>Curated for Every Palate</h2>
+    </div>
+    <div class="menu-grid" id="menuGrid">
+      <div class="menu-card">
+        <div class="menu-card-img">
+          <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&h=350&fit=crop" alt="Butter Chicken">
+        </div>
+        <div class="menu-card-body">
+          <span class="category">Curries</span>
+          <h3>Butter Chicken</h3>
+          <p>Tender chicken in a rich, creamy tomato sauce with aromatic spices and a touch of fenugreek.</p>
+          <div class="menu-card-footer">
+            <span class="menu-card-price">£14.95</span>
+            <div class="menu-card-tags"><span>GF</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-img">
+          <img src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500&h=350&fit=crop" alt="Lamb Biryani">
+        </div>
+        <div class="menu-card-body">
+          <span class="category">Biryani &amp; Rice</span>
+          <h3>Lamb Dum Biryani</h3>
+          <p>Slow-cooked lamb layered with fragrant basmati, saffron, and caramelised onions sealed in dough.</p>
+          <div class="menu-card-footer">
+            <span class="menu-card-price">£16.95</span>
+            <div class="menu-card-tags"><span>GF</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-card-img">
+          <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&h=350&fit=crop" alt="Paneer Tikka">
+        </div>
+        <div class="menu-card-body">
+          <span class="category">Tandoori &amp; Grill</span>
+          <h3>Paneer Tikka</h3>
+          <p>Marinated cottage cheese grilled in our clay tandoor, served with mint chutney and pickled onions.</p>
+          <div class="menu-card-footer">
+            <span class="menu-card-price">£11.95</span>
+            <div class="menu-card-tags"><span>V</span><span>GF</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-cta">
+      <a href="#" class="btn-outline">View Full Menu</a>
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- REVIEWS               -->
+  <!-- ===================== -->
+  <section class="section-reviews" id="reviews">
+    <div class="section-title">
+      <span class="label">Testimonials</span>
+      <h2>What Our Guests Say</h2>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid">
+      <div class="review-card">
+        <div class="review-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <blockquote>"Just had an awesome meal at Rao's! The food was tasty and looked so appetizing. The butter chicken with garlic naan was delicious — I'll be back!"</blockquote>
+        <div class="review-author">Paulette Ivory</div>
+        <div class="review-source">Google Reviews</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <blockquote>"Glad to discover this place! Food was great and the atmosphere had a lovely modern vibe. One of the best restaurants in Hackney."</blockquote>
+        <div class="review-author">Abigail Rendle</div>
+        <div class="review-source">Google Reviews</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <blockquote>"The cocktail menu is outstanding and the tandoori dishes are next level. Perfect fusion of traditional and contemporary."</blockquote>
+        <div class="review-author">James Mitchell</div>
+        <div class="review-source">TripAdvisor</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- EVENTS                -->
+  <!-- ===================== -->
+  <section class="section-events" id="events">
+    <div class="events-bg">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=800&fit=crop" alt="Private dining at Rao's">
+    </div>
+    <div class="events-overlay"></div>
+    <div class="events-content">
+      <span class="label">Events &amp; Private Dining</span>
+      <h2>Host Your Next Celebration With Us</h2>
+      <p>From intimate birthday dinners to corporate gatherings and wedding receptions, our team will craft a bespoke experience tailored to your occasion.</p>
+      <div class="events-tags">
+        <span>Birthdays</span>
+        <span>Corporate</span>
+        <span>Weddings</span>
+        <span>Set Menus</span>
+      </div>
+      <a href="#" class="btn-outline">Explore Events</a>
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- CONTACT               -->
+  <!-- ===================== -->
+  <section class="section-contact" id="contact">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h2>Find Us</h2>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Address</div>
+            <div class="contact-value">230B Dalston Ln<br>Hackney Downs, London E8 1LA</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Phone</div>
+            <div class="contact-value"><a href="tel:02037378112" style="color:var(--text-primary)">020 3737 8112</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:info.raos.london@gmail.com" style="color:var(--text-primary)">info.raos.london@gmail.com</a></div>
+          </div>
+        </div>
+
+        <div class="contact-hours">
+          <h3>Opening Hours</h3>
+          <div class="hours-row"><span class="day">Monday</span><span class="time">17:00 – 23:00</span></div>
+          <div class="hours-row"><span class="day">Tuesday</span><span class="time">17:00 – 23:00</span></div>
+          <div class="hours-row"><span class="day">Wednesday</span><span class="time">17:00 – 23:00</span></div>
+          <div class="hours-row"><span class="day">Thursday</span><span class="time">17:00 – 23:00</span></div>
+          <div class="hours-row"><span class="day">Friday</span><span class="time">12:00 – 00:00</span></div>
+          <div class="hours-row"><span class="day">Saturday</span><span class="time">12:00 – 00:00</span></div>
+          <div class="hours-row"><span class="day">Sunday</span><span class="time">12:00 – 23:00</span></div>
+        </div>
+      </div>
+      <div class="contact-map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.5!2d-0.0637!3d51.5495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761c6b2a4f0b0b%3A0x1234567890abcdef!2s230B+Dalston+Ln%2C+London+E8+1LA!5e0!3m2!1sen!2suk!4v1234567890" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-logo">Rao's</span>
+      <span class="footer-copy">&copy; 2026 Rao's Bar &amp; Restaurant Ltd. All Rights Reserved.</span>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/profile.php?id=61567812172506" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/raosbarandrestaurant" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== JAVASCRIPT ===================== -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Refresh all ScrollTriggers on resize so stacked pins recalculate
+    window.addEventListener('resize', () => ScrollTrigger.refresh());
+
+    // ===== LOADER =====
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+
+        // Step 1: Section 1 + 5 prototype animations
+        initAnimations();
+
+        // Step 2: Section 2 (Hero Scroll Sequence) — DOM order
+        initHeroScroll();
+        ScrollTrigger.sort();
+
+        // Step 3: Wait two frames, then Section 3
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            initQHGallery();
+            ScrollTrigger.sort();
+
+            // Step 4: Wait two more frames, then Section 4
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                initJobySection();
+
+                // Step 5: Final refresh
+                requestAnimationFrame(() => {
+                  ScrollTrigger.sort();
+                  ScrollTrigger.refresh();
+                });
+              });
+            });
+          });
+        });
+      }, 1200);
+    });
+
+    // ===== HAMBURGER =====
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+    });
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+      });
+    });
+
+    // ===== NAV SCROLL + CTA VISIBILITY =====
+    const floatingCta = document.getElementById('floatingCta');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const viewH = window.innerHeight;
+      document.getElementById('nav').classList.toggle('scrolled', scrollY > 50);
+
+      const menuSection = document.getElementById('menu');
+      const footer = document.querySelector('.footer');
+      const menuTop = menuSection ? menuSection.offsetTop - viewH : 999999;
+      const footerTop = footer ? footer.offsetTop - viewH : 999999;
+
+      if (scrollY > menuTop && scrollY < footerTop) {
+        floatingCta.classList.add('visible');
+      } else {
+        floatingCta.classList.remove('visible');
+      }
+    });
+
+    // ===== NAVBAR AUTO-HIDE =====
+    (function() {
+      var SCROLL_UP_THRESHOLD = 5;
+      var MOUSE_ZONE = 8;
+      var HIDE_DELAY = 300;
+      var MIN_SCROLL = 50;
+
+      var navbar = document.querySelector('.nav');
+      if (!navbar) return;
+
+      var lastY = window.scrollY;
+      var hidden = false;
+      var mouseAtTop = false;
+      var hideTimer = null;
+      var ticking = false;
+
+      function show() {
+        if (!hidden) return;
+        hidden = false;
+        navbar.classList.remove('nav-hidden');
+        navbar.classList.add('nav-visible');
+      }
+
+      function hide() {
+        if (hidden) return;
+        hidden = true;
+        navbar.classList.remove('nav-visible');
+        navbar.classList.add('nav-hidden');
+      }
+
+      window.addEventListener('scroll', function() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function() {
+          var y = window.scrollY;
+          var delta = y - lastY;
+
+          if (y < MIN_SCROLL) {
+            show();
+            lastY = y;
+            ticking = false;
+            return;
+          }
+
+          if (delta > 0 && !hidden && !mouseAtTop) hide();
+          if (delta < -SCROLL_UP_THRESHOLD && hidden) show();
+
+          lastY = y;
+          ticking = false;
+        });
+      }, { passive: true });
+
+      window.addEventListener('mousemove', function(e) {
+        if (e.clientY <= MOUSE_ZONE) {
+          mouseAtTop = true;
+          clearTimeout(hideTimer);
+          if (hidden) show();
+        } else if (mouseAtTop) {
+          mouseAtTop = false;
+          hideTimer = setTimeout(function() {
+            if (!mouseAtTop && window.scrollY > MIN_SCROLL) hide();
+          }, HIDE_DELAY);
+        }
+      }, { passive: true });
+
+      navbar.addEventListener('mouseenter', function() { clearTimeout(hideTimer); });
+      navbar.addEventListener('mouseleave', function() {
+        if (window.scrollY > MIN_SCROLL && !mouseAtTop) {
+          hideTimer = setTimeout(hide, HIDE_DELAY);
+        }
+      });
+
+      navbar.classList.add('nav-visible');
+    })();
+
+    // ===== WELCOME HEADLINE WORD SPLIT =====
+    const headlineText = "Discover a dining experience where every dish tells a story";
+    const headlineEl = document.getElementById('welcomeHeadline');
+    headlineText.split(' ').forEach(word => {
+      const span = document.createElement('span');
+      span.className = 'word';
+      span.textContent = word + '\u00A0';
+      headlineEl.appendChild(span);
+    });
+
+    // ===== SOUND TOGGLE =====
+    let soundEnabled = false;
+    const soundToggle = document.getElementById('soundToggle');
+    const soundOn = document.getElementById('soundOn');
+    const soundOff = document.getElementById('soundOff');
+    const sizzleAudio = document.getElementById('sizzleAudio');
+    if (sizzleAudio) sizzleAudio.volume = 0.4;
+
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundToggle.classList.toggle('active', soundEnabled);
+      soundOn.style.display = soundEnabled ? 'block' : 'none';
+      soundOff.style.display = soundEnabled ? 'none' : 'block';
+      document.getElementById('soundPrompt').classList.remove('visible');
+
+      if (sizzleAudio) {
+        if (soundEnabled) {
+          sizzleAudio.play().catch(() => {});
+        } else {
+          sizzleAudio.pause();
+        }
+      }
+    });
+
+    // ===== SECTION 1 + 5: PROTOTYPE ANIMATIONS (FROM PROTOTYPE — VERBATIM) =====
+    function initAnimations() {
+      const isMobile = window.innerWidth < 768;
+
+      // ----- HERO ANIMATION -----
+      if (!isMobile) {
+        const heroTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.hero-container',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1,
+            pin: '#hero',
+            pinSpacing: false,
+          }
+        });
+
+        heroTl
+          .to('#heroPortal', {
+            scale: 6,
+            borderRadius: '0px',
+            borderWidth: 0,
+            duration: 1,
+            ease: 'none'
+          }, 0)
+          .to('#heroTextLeft', { x: -300, opacity: 0, duration: 0.5, ease: 'none' }, 0)
+          .to('#heroTextRight', { x: 300, opacity: 0, duration: 0.5, ease: 'none' }, 0)
+          .to('#scrollPrompt', { opacity: 0, y: 30, duration: 0.3, ease: 'none' }, 0)
+          .to('#heroFireBg', { opacity: 1, duration: 0.6, ease: 'none' }, 0.3)
+          .to('#heroBrandReveal', { opacity: 1, duration: 0.4, ease: 'none' }, 0.6);
+
+      } else {
+        gsap.to('#heroFireBg', { opacity: 0.4, duration: 1.5, delay: 1.5 });
+        gsap.from('#heroTextLeft', { y: 30, opacity: 0, duration: 1, delay: 0.5 });
+        gsap.from('#heroTextRight', { y: 30, opacity: 0, duration: 1, delay: 0.8 });
+      }
+
+      // ----- WELCOME ANIMATION -----
+      gsap.to('.word', {
+        opacity: 1,
+        y: 0,
+        duration: 0.4,
+        stagger: 0.06,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.welcome-statement',
+          start: 'top 75%',
+        }
+      });
+
+      gsap.to('#welcomeTagline', {
+        opacity: 1,
+        duration: 0.8,
+        delay: 0.4,
+        scrollTrigger: { trigger: '.welcome-statement', start: 'top 70%' }
+      });
+
+      gsap.to('#welcomeDesc', {
+        opacity: 1,
+        duration: 0.8,
+        delay: 0.6,
+        scrollTrigger: { trigger: '.welcome-statement', start: 'top 70%' }
+      });
+
+      gsap.to('.pillar', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '#pillars', start: 'top 80%' }
+      });
+
+      // ----- SIZZLER RISE -----
+      gsap.set('#sizzlerPlate', { y: '100vh' });
+      gsap.set('#dishSpecsLeft', { opacity: 0, y: 20 });
+      gsap.set('#dishSpecsRight', { opacity: 0, y: 20 });
+
+      if (!isMobile) {
+        const sizzlerTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.sizzler-container',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1,
+            pin: '#sizzlerSection',
+            pinSpacing: false,
+            onEnter: () => {
+              document.getElementById('soundToggle').classList.add('visible');
+              setTimeout(() => {
+                document.getElementById('soundPrompt').classList.add('visible');
+                setTimeout(() => document.getElementById('soundPrompt').classList.remove('visible'), 3000);
+              }, 500);
+              if (soundEnabled && sizzleAudio) {
+                sizzleAudio.play().catch(() => {});
+              }
+            },
+            onLeave: () => {
+              if (sizzleAudio) { sizzleAudio.pause(); }
+            },
+            onEnterBack: () => {
+              if (soundEnabled && sizzleAudio) {
+                sizzleAudio.play().catch(() => {});
+              }
+            },
+            onLeaveBack: () => {
+              if (sizzleAudio) { sizzleAudio.pause(); }
+            }
+          }
+        });
+
+        sizzlerTl
+          .to('#sizzlerPlate', { y: 0, duration: 0.4, ease: 'power2.out' }, 0)
+          .to('#sizzlerTextLeft h2', { opacity: 0.9, duration: 0.2, ease: 'none' }, 0.1)
+          .to('#sizzlerTextRight h2', { opacity: 0.9, duration: 0.2, ease: 'none' }, 0.1)
+          .to('#sizzlerSteam', { opacity: 1, duration: 0.15, ease: 'none' }, 0.2)
+          .to('#dishSpecsLeft', { opacity: 1, y: 0, duration: 0.15, ease: 'none' }, 0.25)
+          .to('#dishSpecsRight', { opacity: 1, y: 0, duration: 0.15, ease: 'none' }, 0.28)
+          .to({}, { duration: 0.6 }, 0.4);
+
+      } else {
+        gsap.set('#sizzlerPlate', { y: 80 });
+        gsap.to('#sizzlerPlate', {
+          y: 0, opacity: 1, duration: 1,
+          scrollTrigger: { trigger: '#sizzlerSection', start: 'top 70%' }
+        });
+        document.getElementById('soundToggle').classList.add('visible');
+      }
+
+      // ----- MENU CARDS -----
+      gsap.to('.menu-card', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '#menuGrid', start: 'top 80%' }
+      });
+
+      // ----- REVIEWS -----
+      gsap.to('.review-card', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '#reviewsGrid', start: 'top 80%' }
+      });
+
+      // ----- EVENTS PARALLAX -----
+      gsap.to('.events-bg img', {
+        y: -60,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.section-events',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+      gsap.from('.events-content', {
+        x: -40, opacity: 0, duration: 0.8,
+        scrollTrigger: { trigger: '.section-events', start: 'top 70%' }
+      });
+
+      // ----- CONTACT -----
+      gsap.from('.contact-info', {
+        y: 30, opacity: 0, duration: 0.8,
+        scrollTrigger: { trigger: '.section-contact', start: 'top 75%' }
+      });
+      gsap.from('.contact-map', {
+        y: 30, opacity: 0, duration: 0.8, delay: 0.2,
+        scrollTrigger: { trigger: '.section-contact', start: 'top 75%' }
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SECTION 2 — HERO SCROLL SEQUENCE
+    // ═══════════════════════════════════════════════════════════════
+
+    function initHeroScroll() {
+      const section = document.getElementById('section-2-hero');
+      const canvas  = document.getElementById('s2Canvas');
+      if (!section || !canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const FRAME_COUNT = 148;
+
+      // ── 1. BUILD IMAGE ARRAY ──────────────────────────────────────
+      const images = Array.from({ length: FRAME_COUNT }, (_, i) => {
+        const img = new Image();
+        img.src = `../Assets/ParamparaHeroFrames/${String(i + 1).padStart(4, '0')}.jpg`;
+        return img;
+      });
+
+      // ── 2. CANVAS RESIZE + COVER-FIT DRAW ────────────────────────
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = canvas.offsetWidth;
+        const h = canvas.offsetHeight;
+        if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+          canvas.width  = w * dpr;
+          canvas.height = h * dpr;
+          ctx.scale(dpr, dpr);
+        }
+      }
+
+      function drawFrame(index) {
+        const img = images[Math.min(index, FRAME_COUNT - 1)];
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+
+        resizeCanvas();
+        const displayW = canvas.offsetWidth;
+        const displayH = canvas.offsetHeight;
+
+        const scaleX = displayW / img.naturalWidth;
+        const scaleY = displayH / img.naturalHeight;
+        const scale  = Math.max(scaleX, scaleY);
+
+        const drawW = img.naturalWidth  * scale;
+        const drawH = img.naturalHeight * scale;
+        const drawX = (displayW - drawW) / 2;
+        const drawY = (displayH - drawH) / 2;
+
+        ctx.clearRect(0, 0, displayW, displayH);
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      }
+
+      // ── 3. SCROLL PROGRESS → FRAME INDEX ─────────────────────────
+      function getScrollProgress() {
+        const sectionTop    = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const scrollable    = sectionHeight - window.innerHeight;
+        if (scrollable <= 0) return 0;
+        return Math.min(1, Math.max(0, (window.scrollY - sectionTop) / scrollable));
+      }
+
+      // ── 4. RAF LOOP — frame draw ──────────────────────────────────
+      let lastFrameIndex = -1;
+      function tick() {
+        const progress = getScrollProgress();
+        const frameIndex = Math.min(Math.floor(progress * (FRAME_COUNT - 1)), FRAME_COUNT - 1);
+        if (frameIndex !== lastFrameIndex) {
+          drawFrame(frameIndex);
+          lastFrameIndex = frameIndex;
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      // Draw frame 0 immediately once first image loads
+      images[0].onload = () => drawFrame(0);
+      if (images[0].complete) drawFrame(0);
+
+      // Resize handling
+      const ro = new ResizeObserver(() => {
+        resizeCanvas();
+        drawFrame(lastFrameIndex >= 0 ? lastFrameIndex : 0);
+      });
+      ro.observe(canvas);
+
+      // ── 5. SCROLL INDICATOR FADE ──────────────────────────────────
+      const scrollIndicator = document.getElementById('s2ScrollIndicator');
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: () => `${0.05 * section.offsetHeight}px top`,
+        scrub: 1,
+        onUpdate: self => {
+          if (scrollIndicator) scrollIndicator.style.opacity = 1 - self.progress;
+        }
+      });
+
+      // ── 6. COPY BLOCK 1 ENTRANCE (fires once on page load) ────────
+      const copy1Left  = document.getElementById('s2Copy1Left');
+      const copy1Right = document.getElementById('s2Copy1Right');
+
+      setTimeout(() => {
+        if (copy1Left)  copy1Left.classList.add('s2-visible');
+        if (copy1Right) copy1Right.classList.add('s2-visible');
+      }, 400);
+
+      // ── 7. GSAP SCROLL TRIGGERS — COPY BLOCKS ─────────────────────
+      const sh = () => section.offsetHeight;
+
+      // Copy 1 — FADE OUT (10%–15%)
+      gsap.to('#s2Copy1', {
+        opacity: 0,
+        y: -30,
+        filter: 'blur(4px)',
+        scrollTrigger: {
+          trigger: section,
+          start: () => `${0.10 * sh()}px top`,
+          end:   () => `${0.15 * sh()}px top`,
+          scrub: 1,
+        }
+      });
+
+      // Copy 2A — FADE IN (19%–23%)
+      gsap.fromTo('#s2Copy2A',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          scrollTrigger: {
+            trigger: section,
+            start: () => `${0.19 * sh()}px top`,
+            end:   () => `${0.23 * sh()}px top`,
+            scrub: 1,
+          }
+        }
+      );
+
+      // Copy 2A — FADE OUT (30%–34%)
+      gsap.to('#s2Copy2A', {
+        opacity: 0, y: -20,
+        scrollTrigger: {
+          trigger: section,
+          start: () => `${0.30 * sh()}px top`,
+          end:   () => `${0.34 * sh()}px top`,
+          scrub: 1,
+        }
+      });
+
+      // Copy 2B — FADE IN (32%–36%)
+      gsap.fromTo('#s2Copy2B',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          scrollTrigger: {
+            trigger: section,
+            start: () => `${0.32 * sh()}px top`,
+            end:   () => `${0.36 * sh()}px top`,
+            scrub: 1,
+          }
+        }
+      );
+
+      // Copy 2B — FADE OUT (43%–46%)
+      gsap.to('#s2Copy2B', {
+        opacity: 0, y: -20,
+        scrollTrigger: {
+          trigger: section,
+          start: () => `${0.43 * sh()}px top`,
+          end:   () => `${0.46 * sh()}px top`,
+          scrub: 1,
+        }
+      });
+
+      // Copy 3 container — FADE IN (48%–54%)
+      gsap.fromTo('#s2Copy3',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          scrollTrigger: {
+            trigger: section,
+            start: () => `${0.48 * sh()}px top`,
+            end:   () => `${0.54 * sh()}px top`,
+            scrub: 1,
+          }
+        }
+      );
+
+      // Copy 3 words — staggered entrance (48%–54%)
+      gsap.fromTo('#s2Copy3 .s2-word',
+        { opacity: 0, y: 40, rotateX: -10 },
+        {
+          opacity: 1, y: 0, rotateX: 0,
+          stagger: 0.04,
+          scrollTrigger: {
+            trigger: section,
+            start: () => `${0.48 * sh()}px top`,
+            end:   () => `${0.54 * sh()}px top`,
+            scrub: 1,
+          }
+        }
+      );
+    }
+    // ═══════════════════════════════════════════════════════════════
+    // END initHeroScroll
+    // ═══════════════════════════════════════════════════════════════
+
+    // ---- SECTION 3: QH 3D CARD GALLERY ----
+    function initQHGallery() {
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        initMobileGallery();
+        return;
+      }
+
+      const cards = gsap.utils.toArray('.qh-card');
+      const totalCards = cards.length;
+
+      const cardData = [
+        {
+          name: 'The Menu',
+          type: 'Indian Fusion Cuisine',
+          highlights: 'Tandoori, Biryani, Craft Cocktails',
+          experience: 'Dine-in \u00b7 Private Events \u00b7 Takeaway',
+          year: 'EST. 2022'
+        },
+        {
+          name: 'Cocktail Bar',
+          type: 'Mixology & Spirits',
+          highlights: 'Signature Blends, Indian-Inspired',
+          experience: 'Walk-in \u00b7 Late Night \u00b7 Groups',
+          year: 'DALSTON'
+        },
+        {
+          name: 'Private Dining',
+          type: 'Bespoke Experiences',
+          highlights: 'Set Menus, Dedicated Space',
+          experience: 'Birthdays \u00b7 Corporate \u00b7 Weddings',
+          year: '6\u201330 GUESTS'
+        },
+        {
+          name: 'Events',
+          type: 'Celebrations & Gatherings',
+          highlights: 'Seasonal, Cultural, Corporate',
+          experience: 'Custom Packages \u00b7 Full Service',
+          year: 'ENQUIRE'
+        },
+        {
+          name: 'Our Story',
+          type: 'Dalston Since 2022',
+          highlights: 'Locally Sourced, Sustainably Minded',
+          experience: 'Tradition Meets Innovation',
+          year: 'HACKNEY'
+        }
+      ];
+
+      const positions = {
+        farLeft:  { x: -1100, z: -500,  rotateY:  35, rotateX: 2,   scale: 0.5,  opacity: 0.15, brightness: 0.35 },
+        left:     { x: -620,  z: -300,  rotateY:  22, rotateX: 2,   scale: 0.7,  opacity: 0.6,  brightness: 0.55 },
+        center:   { x: -30,   z: 0,     rotateY:  -5, rotateX: 1.5, scale: 1,    opacity: 1,    brightness: 1    },
+        right:    { x:  550,  z: -350,  rotateY: -25, rotateX: 2.5, scale: 0.65, opacity: 0.55, brightness: 0.45 },
+        farRight: { x: 1100,  z: -550,  rotateY: -40, rotateX: 3,   scale: 0.45, opacity: 0.1,  brightness: 0.3  }
+      };
+
+      function getPositionForCard(activeIndex, cardIndex) {
+        const diff = cardIndex - activeIndex;
+        if (diff <= -2) return positions.farLeft;
+        if (diff === -1) return positions.left;
+        if (diff === 0)  return positions.center;
+        if (diff === 1)  return positions.right;
+        if (diff >= 2)   return positions.farRight;
+      }
+
+      cards.forEach((card, i) => {
+        const pos = getPositionForCard(0, i);
+        gsap.set(card, {
+          x: pos.x, z: pos.z,
+          rotateY: pos.rotateY, rotateX: pos.rotateX,
+          scale: pos.scale, opacity: pos.opacity,
+          filter: `brightness(${pos.brightness})`,
+          transformPerspective: 1200
+        });
+      });
+
+      let currentActiveIndex = 0;
+
+      function updateMeta(index) {
+        if (index === currentActiveIndex) return;
+        currentActiveIndex = index;
+        const data = cardData[index];
+        const meta = document.getElementById('qhMeta');
+        const targets = meta.querySelectorAll('.qh-meta-value, .qh-meta-name, .qh-meta-year');
+        gsap.to(targets, {
+          opacity: 0,
+          duration: 0.15,
+          onComplete: () => {
+            document.querySelector('#qhMetaTitle .qh-meta-name').textContent = data.name;
+            document.getElementById('qhMetaType').textContent = data.type;
+            document.getElementById('qhMetaHighlights').textContent = data.highlights;
+            document.getElementById('qhMetaExperience').textContent = data.experience;
+            document.getElementById('qhMetaYear').textContent = data.year;
+            gsap.to(targets, { opacity: 1, duration: 0.2 });
+          }
+        });
+      }
+
+      const stepDuration = 1 / (totalCards - 1);
+
+      const qhTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.qh-container',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1.5,
+          pin: '#qhSection',
+          pinSpacing: false,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const activeIndex = Math.min(totalCards - 1, Math.floor(progress * totalCards));
+            updateMeta(activeIndex);
+          }
+        }
+      });
+
+      for (let step = 0; step < totalCards - 1; step++) {
+        const startTime = step * stepDuration;
+        cards.forEach((card, cardIndex) => {
+          const fromPos = getPositionForCard(step, cardIndex);
+          const toPos = getPositionForCard(step + 1, cardIndex);
+          qhTl.fromTo(card, {
+            x: fromPos.x, z: fromPos.z,
+            rotateY: fromPos.rotateY, rotateX: fromPos.rotateX,
+            scale: fromPos.scale, opacity: fromPos.opacity,
+            filter: `brightness(${fromPos.brightness})`,
+            transformPerspective: 1200
+          }, {
+            x: toPos.x, z: toPos.z,
+            rotateY: toPos.rotateY, rotateX: toPos.rotateX,
+            scale: toPos.scale, opacity: toPos.opacity,
+            filter: `brightness(${toPos.brightness})`,
+            transformPerspective: 1200,
+            duration: stepDuration,
+            ease: 'none'
+          }, startTime);
+        });
+      }
+    }
+
+    function initMobileGallery() {
+      const track = document.getElementById('qhTrack');
+      const cards = document.querySelectorAll('.qh-card');
+      const cardData = [
+        { name: 'The Menu',      type: 'Indian Fusion Cuisine',      highlights: 'Tandoori, Biryani, Craft Cocktails',       experience: 'Dine-in \u00b7 Private Events \u00b7 Takeaway', year: 'EST. 2022'      },
+        { name: 'Cocktail Bar',  type: 'Mixology & Spirits',         highlights: 'Signature Blends, Indian-Inspired',         experience: 'Walk-in \u00b7 Late Night \u00b7 Groups',         year: 'DALSTON'        },
+        { name: 'Private Dining',type: 'Bespoke Experiences',        highlights: 'Set Menus, Dedicated Space',                experience: 'Birthdays \u00b7 Corporate \u00b7 Weddings',      year: '6\u201330 GUESTS'},
+        { name: 'Events',        type: 'Celebrations & Gatherings',  highlights: 'Seasonal, Cultural, Corporate',             experience: 'Custom Packages \u00b7 Full Service',             year: 'ENQUIRE'        },
+        { name: 'Our Story',     type: 'Dalston Since 2022',         highlights: 'Locally Sourced, Sustainably Minded',       experience: 'Tradition Meets Innovation',                      year: 'HACKNEY'        }
+      ];
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            const index = parseInt(entry.target.dataset.index, 10);
+            const data = cardData[index];
+            document.querySelector('#qhMetaTitle .qh-meta-name').textContent = data.name;
+            document.getElementById('qhMetaType').textContent = data.type;
+            document.getElementById('qhMetaHighlights').textContent = data.highlights;
+            document.getElementById('qhMetaExperience').textContent = data.experience;
+            document.getElementById('qhMetaYear').textContent = data.year;
+          }
+        });
+      }, { root: track.parentElement, threshold: 0.5 });
+      cards.forEach(card => observer.observe(card));
+    }
+
+    // ---- SECTION 4: OUR PHILOSOPHY — v3 (clip-path wipe) ----
+    function buildWipeTransition(tl, fromIdx, toIdx, startPos, layerImg, panels, dots, catLabels) {
+      var wipeDur = 0.08;
+
+      // Exit current text
+      tl.to(panels[fromIdx].querySelector('.joby-p'), { opacity: 0, y: -10, duration: 0.025 }, startPos);
+      tl.to(panels[fromIdx].querySelector('.joby-h'), { opacity: 0, y: -20, duration: 0.03 }, startPos + 0.01);
+
+      // Exit current label + line shrinks
+      if (catLabels) tl.to(catLabels[fromIdx], { opacity: 0, duration: 0.02 }, startPos);
+      tl.to('.joby-vert-line', { scaleY: 0, duration: 0.04, ease: 'power1.in' }, startPos + 0.01);
+
+      // Show incoming panel container
+      tl.set(panels[toIdx], { opacity: 1 }, startPos + 0.02);
+
+      // Image wipe (clip-path sweep top to bottom)
+      tl.fromTo(layerImg,
+        { clipPath: 'inset(100% 0 0 0)' },
+        { clipPath: 'inset(0% 0 0 0)', duration: wipeDur, ease: 'none' },
+        startPos + 0.02
+      );
+
+      // Line regrows + new label fades in
+      tl.fromTo('.joby-vert-line', { scaleY: 0 }, { scaleY: 1, duration: 0.06, ease: 'power1.out' }, startPos + 0.02);
+      if (catLabels) tl.to(catLabels[toIdx], { opacity: 1, duration: 0.04 }, startPos + 0.03);
+
+      // Hide outgoing panel container
+      tl.set(panels[fromIdx], { opacity: 0 }, startPos + 0.02 + wipeDur);
+
+      // Dots morph
+      tl.to(dots[fromIdx], { width: 6, height: 6, borderRadius: '50%', background: '#C5C0B8', duration: 0.02 }, startPos + 0.03);
+      tl.to(dots[toIdx], { width: 2, height: 22, borderRadius: 1, background: '#1a1a1a', duration: 0.02 }, startPos + 0.05);
+
+      // New headline enters mid-wipe
+      tl.fromTo(panels[toIdx].querySelector('.joby-h'),
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.04 },
+        startPos + 0.02 + wipeDur * 0.5
+      );
+
+      // Pointer events swap
+      tl.set(panels[fromIdx], { pointerEvents: 'none' }, startPos + 0.02 + wipeDur);
+      tl.set(panels[toIdx], { pointerEvents: 'auto' }, startPos + 0.02 + wipeDur);
+
+      // New body text enters after headline
+      tl.fromTo(panels[toIdx].querySelector('.joby-p'),
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.04 },
+        startPos + 0.02 + wipeDur + 0.04
+      );
+    }
+
+    function initJobySection() {
+      var isMobile = window.innerWidth < 768;
+      if (isMobile) return;
+
+      var panels    = gsap.utils.toArray('.joby-panel');
+      var layerImgs = gsap.utils.toArray('.joby-img-layer');
+      var dots      = gsap.utils.toArray('.joby-dot');
+      var catLabels = gsap.utils.toArray('.joby-cat-label');
+
+      panels.forEach(function(panel, i) {
+        gsap.set(panel, { opacity: i === 0 ? 1 : 0, pointerEvents: i === 0 ? 'auto' : 'none' });
+      });
+      gsap.set(panels[0].querySelector('.joby-h'), { opacity: 0, y: 25 });
+      gsap.set(panels[0].querySelector('.joby-p'), { opacity: 0, y: 15 });
+      catLabels.forEach(function(label) { gsap.set(label, { opacity: 0 }); });
+
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.joby-scroll-spacer',
+          start: 'top top',
+          end: 'bottom bottom',
+          pin: '#jobyPinned',
+          pinSpacing: false,
+          scrub: 1
+        }
+      });
+
+      // Intro: line grows, first label fades in, dots appear, slide 0 text enters
+      tl.fromTo('.joby-vert-line', { scaleY: 0 }, { scaleY: 1, duration: 0.08, ease: 'power1.out' }, 0.00);
+      tl.fromTo(catLabels[0],     { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0.02);
+      tl.fromTo('.joby-dots',     { opacity: 0 }, { opacity: 1, duration: 0.03 }, 0.06);
+      tl.fromTo(panels[0].querySelector('.joby-h'), { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.04 }, 0.09);
+      tl.fromTo(panels[0].querySelector('.joby-p'), { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.04 }, 0.14);
+
+      buildWipeTransition(tl, 0, 1, 0.26, layerImgs[0], panels, dots, catLabels);
+      buildWipeTransition(tl, 1, 2, 0.50, layerImgs[1], panels, dots, catLabels);
+      buildWipeTransition(tl, 2, 3, 0.74, layerImgs[2], panels, dots, catLabels);
+    }
+
+  </script>
+</body>
+</html>
