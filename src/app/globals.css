@@ -178,6 +178,14 @@ body::after {
   filter: grayscale(0.8) brightness(0.7) contrast(1.1);
 }
 
+/* ===== NAVBAR AUTO-HIDE ===== */
+nav.nav-hidden {
+  transform: translateY(-100%);
+}
+nav.nav-visible {
+  transform: translateY(0);
+}
+
 /* ===== JOBY PILLARS — SECTION 2 HALF 2 ===== */
 
 .joby-outer {
