@@ -6,8 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_FRAMES = 61;
-const FRAME_PATH = (i: number) => `/Frames/${i}.jpg`;
+const TOTAL_FRAMES = 101;
+const FRAME_PATH = (i: number) => `/Frames2/${String(i).padStart(2, "0")}.jpg`;
 
 const pillars = [
   {
@@ -49,15 +49,6 @@ export default function WelcomeSection() {
   const copy2BRef = useRef<HTMLDivElement>(null);
   const copy3Ref = useRef<HTMLDivElement>(null);
 
-  // Half 2 refs
-  const jobySpacerRef = useRef<HTMLDivElement>(null);
-  const jobyPinnedRef = useRef<HTMLDivElement>(null);
-  const dotsContRef = useRef<HTMLDivElement>(null);
-  const vertLineRef = useRef<HTMLDivElement>(null);
-  const catLabelsRef = useRef<(HTMLSpanElement | null)[]>([]);
-  const panelsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
-
   useEffect(() => {
     // ═══════════════════════════════════════════
     // HALF 1 — RAF FRAME SEQUENCE (Parampara-style)
@@ -71,6 +62,7 @@ export default function WelcomeSection() {
     const images = Array.from({ length: TOTAL_FRAMES }, (_, i) => {
       const img = new Image();
       img.src = FRAME_PATH(i + 1);
+      if (i === 0) img.fetchPriority = "high";
       return img;
     });
 
@@ -125,8 +117,14 @@ export default function WelcomeSection() {
       rafId = requestAnimationFrame(tick);
     }
     rafId = requestAnimationFrame(tick);
-    images[0].onload = () => drawFrame(0);
-    if (images[0].complete) drawFrame(0);
+    images[0].onload = () => {
+      drawFrame(0);
+    };
+    if (images[0].complete && images[0].naturalWidth > 0) {
+      drawFrame(0);
+    } else {
+      images[0].onload = () => drawFrame(0);
+    }
 
     const ro = new ResizeObserver(() => {
       resizeCanvas();
@@ -237,40 +235,22 @@ export default function WelcomeSection() {
     );
 
     // ═══════════════════════════════════════════
-    // HALF 2 — JOBY GSAP TIMELINE (exact prototype pattern)
+    // HALF 2 — JOBY CLIP-PATH WIPE (timeline-driven)
     // ═══════════════════════════════════════════
-    const panels = panelsRef.current.filter(Boolean) as HTMLDivElement[];
-    const layerImgs = imagesRef.current
-      .slice(1)
-      .filter(Boolean) as HTMLImageElement[];
-    const dots = Array.from(
-      dotsContRef.current?.querySelectorAll(".joby-dot") ?? [],
-    ) as HTMLElement[];
-    const catLabels = catLabelsRef.current.filter(Boolean) as HTMLSpanElement[];
-
-    if (panels.length < 4 || layerImgs.length < 3) return;
-
-    // Initial states — exact prototype
-    panels.forEach((panel, i) => {
-      gsap.set(panel, {
-        opacity: i === 0 ? 1 : 0,
-        pointerEvents: i === 0 ? "auto" : "none",
-      });
-    });
-    gsap.set(panels[0].querySelector(".joby-h"), { opacity: 0, y: 25 });
-    gsap.set(panels[0].querySelector(".joby-p"), { opacity: 0, y: 15 });
-    catLabels.forEach((label) => gsap.set(label, { opacity: 0 }));
 
     function buildWipeTransition(
       tl: gsap.core.Timeline,
       fromIdx: number,
       toIdx: number,
       startPos: number,
-      layerImg: HTMLImageElement,
+      layerImg: Element,
+      panels: Element[],
+      dots: Element[],
+      catLabels: Element[],
     ) {
       const wipeDur = 0.08;
-      const vl = vertLineRef.current;
 
+      // Exit current text
       tl.to(
         panels[fromIdx].querySelector(".joby-p"),
         { opacity: 0, y: -10, duration: 0.025 },
@@ -281,34 +261,46 @@ export default function WelcomeSection() {
         { opacity: 0, y: -20, duration: 0.03 },
         startPos + 0.01,
       );
+
+      // Exit current label + line shrinks
       tl.to(catLabels[fromIdx], { opacity: 0, duration: 0.02 }, startPos);
       tl.to(
-        vl,
+        ".joby-vert-line",
         { scaleY: 0, duration: 0.04, ease: "power1.in" },
         startPos + 0.01,
       );
+
+      // Show incoming panel container
       tl.set(panels[toIdx], { opacity: 1 }, startPos + 0.02);
+
+      // Image wipe — clip-path sweep top to bottom (NEVER opacity)
       tl.fromTo(
         layerImg,
         { clipPath: "inset(100% 0 0 0)" },
         { clipPath: "inset(0% 0 0 0)", duration: wipeDur, ease: "none" },
         startPos + 0.02,
       );
+
+      // Line regrows + new label fades in
       tl.fromTo(
-        vl,
+        ".joby-vert-line",
         { scaleY: 0 },
         { scaleY: 1, duration: 0.06, ease: "power1.out" },
         startPos + 0.02,
       );
       tl.to(catLabels[toIdx], { opacity: 1, duration: 0.04 }, startPos + 0.03);
+
+      // Hide outgoing panel container
       tl.set(panels[fromIdx], { opacity: 0 }, startPos + 0.02 + wipeDur);
+
+      // Dots morph
       tl.to(
         dots[fromIdx],
         {
           width: 6,
           height: 6,
           borderRadius: "50%",
-          background: "rgba(255,255,255,0.3)",
+          background: "rgba(255,255,255,0.35)",
           duration: 0.02,
         },
         startPos + 0.03,
@@ -324,12 +316,16 @@ export default function WelcomeSection() {
         },
         startPos + 0.05,
       );
+
+      // New headline enters mid-wipe
       tl.fromTo(
         panels[toIdx].querySelector(".joby-h"),
         { opacity: 0, y: 25 },
         { opacity: 1, y: 0, duration: 0.04 },
         startPos + 0.02 + wipeDur * 0.5,
       );
+
+      // Pointer events swap
       tl.set(
         panels[fromIdx],
         { pointerEvents: "none" },
@@ -340,6 +336,8 @@ export default function WelcomeSection() {
         { pointerEvents: "auto" },
         startPos + 0.02 + wipeDur,
       );
+
+      // New body text enters after headline
       tl.fromTo(
         panels[toIdx].querySelector(".joby-p"),
         { opacity: 0, y: 15 },
@@ -348,64 +346,84 @@ export default function WelcomeSection() {
       );
     }
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: jobySpacerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        pin: jobyPinnedRef.current,
-        pinSpacing: false,
-        anticipatePin: 1,
-        scrub: 1,
-      },
-    });
+    // Mobile guard — no animation on small screens
+    if (window.innerWidth >= 768) {
+      const panels = Array.from(
+        document.querySelectorAll("#jobyPinned .joby-panel"),
+      ) as Element[];
+      const layerImgs = Array.from(
+        document.querySelectorAll("#jobyPinned .joby-img-layer"),
+      ) as Element[];
+      const dots = Array.from(
+        document.querySelectorAll("#jobyPinned .joby-dot"),
+      ) as Element[];
+      const catLabels = Array.from(
+        document.querySelectorAll("#jobyPinned .joby-cat-label"),
+      ) as Element[];
 
-    // Intro: line grows, label fades, dots appear, first slide text enters
-    tl.fromTo(
-      vertLineRef.current,
-      { scaleY: 0 },
-      { scaleY: 1, duration: 0.08, ease: "power1.out" },
-      0.0,
-    );
-    tl.fromTo(
-      catLabels[0],
-      { opacity: 0 },
-      { opacity: 1, duration: 0.04 },
-      0.02,
-    );
-    tl.fromTo(
-      dotsContRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.03 },
-      0.06,
-    );
-    tl.fromTo(
-      panels[0].querySelector(".joby-h"),
-      { opacity: 0, y: 25 },
-      { opacity: 1, y: 0, duration: 0.04 },
-      0.09,
-    );
-    tl.fromTo(
-      panels[0].querySelector(".joby-p"),
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.04 },
-      0.14,
-    );
+      // Initial states
+      panels.forEach((panel, i) => {
+        gsap.set(panel, {
+          opacity: i === 0 ? 1 : 0,
+          pointerEvents: i === 0 ? "auto" : "none",
+        });
+      });
+      gsap.set(panels[0].querySelector(".joby-h"), { opacity: 0, y: 25 });
+      gsap.set(panels[0].querySelector(".joby-p"), { opacity: 0, y: 15 });
+      catLabels.forEach((label) => gsap.set(label, { opacity: 0 }));
 
-    buildWipeTransition(tl, 0, 1, 0.26, layerImgs[0]);
-    buildWipeTransition(tl, 1, 2, 0.5, layerImgs[1]);
-    buildWipeTransition(tl, 2, 3, 0.74, layerImgs[2]);
+      const jobyTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".joby-scroll-spacer",
+          start: "top top",
+          end: "bottom bottom",
+          pin: "#jobyPinned",
+          pinSpacing: false,
+          scrub: 1,
+        },
+      });
 
-    // Refresh after setup so GSAP measures correct positions
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 300);
+      // Intro: line grows, first label fades in, dots appear, slide 0 text enters
+      jobyTl.fromTo(
+        ".joby-vert-line",
+        { scaleY: 0 },
+        { scaleY: 1, duration: 0.08, ease: "power1.out" },
+        0.0,
+      );
+      jobyTl.fromTo(
+        catLabels[0],
+        { opacity: 0 },
+        { opacity: 1, duration: 0.04 },
+        0.02,
+      );
+      jobyTl.fromTo(
+        "#jobyDots",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.03 },
+        0.06,
+      );
+      jobyTl.fromTo(
+        panels[0].querySelector(".joby-h"),
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.04 },
+        0.09,
+      );
+      jobyTl.fromTo(
+        panels[0].querySelector(".joby-p"),
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.04 },
+        0.14,
+      );
+
+      buildWipeTransition(jobyTl, 0, 1, 0.26, layerImgs[0], panels, dots, catLabels);
+      buildWipeTransition(jobyTl, 1, 2, 0.5, layerImgs[1], panels, dots, catLabels);
+      buildWipeTransition(jobyTl, 2, 3, 0.74, layerImgs[2], panels, dots, catLabels);
+    }
 
     return () => {
       cancelAnimationFrame(rafId);
       ro.disconnect();
       ScrollTrigger.getAll().forEach((st) => st.kill());
-      tl.kill();
     };
   }, []);
 
@@ -433,7 +451,7 @@ export default function WelcomeSection() {
             style={{ zIndex: 2 }}
           >
             <div>
-              <p className="font-body text-[0.7rem] tracking-[0.25em] text-gold/70 uppercase mb-3">
+              <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-3">
                 Dalston, London
               </p>
               <h1
@@ -450,7 +468,7 @@ export default function WelcomeSection() {
               </p>
             </div>
             <div className="text-right">
-              <p className="font-body text-[0.7rem] tracking-[0.25em] text-gold/70 uppercase mb-3">
+              <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-3">
                 Est. in tradition
               </p>
               <p
@@ -473,7 +491,7 @@ export default function WelcomeSection() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
             style={{ zIndex: 2, opacity: 0 }}
           >
-            <p className="font-body text-[0.7rem] tracking-[0.25em] text-gold/70 uppercase mb-4">
+            <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-4">
               The ingredients
             </p>
             <h2
@@ -497,7 +515,7 @@ export default function WelcomeSection() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
             style={{ zIndex: 2, opacity: 0 }}
           >
-            <p className="font-body text-[0.7rem] tracking-[0.25em] text-gold/70 uppercase mb-4">
+            <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-4">
               The craft
             </p>
             <h2
@@ -521,7 +539,7 @@ export default function WelcomeSection() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
             style={{ zIndex: 2, opacity: 0 }}
           >
-            <p className="font-body text-[0.7rem] tracking-[0.25em] text-gold/70 uppercase mb-6">
+            <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-6">
               The promise
             </p>
             <h2
@@ -542,95 +560,82 @@ export default function WelcomeSection() {
       {/* ═══════════════════════════════════
           HALF 2 — JOBY FULL-SCREEN PILLARS
           ═══════════════════════════════════ */}
-      <div
-        ref={jobySpacerRef}
-        style={{ height: "500vh", position: "relative" }}
-      >
-        <div
-          ref={jobyPinnedRef}
-          className="joby-pinned"
-          id="jobyPinned"
-          style={{
-            height: "100vh",
-            width: "100%",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Full-screen image stack */}
-          <div className="joby-image-wrap">
-            {pillars.map((p, i) => (
+      <section className="joby-outer" id="philosophy">
+        <div className="joby-scroll-spacer">
+          <div className="joby-pinned" id="jobyPinned">
+
+            {/* Full-screen image stack */}
+            <div className="joby-image-wrap">
               <img
-                key={i}
-                ref={(el) => {
-                  imagesRef.current[i] = el;
-                }}
-                className={`joby-img ${i === 0 ? "joby-img-base" : "joby-img-layer"}`}
-                data-index={i}
-                src={p.img}
-                alt={p.alt}
+                className="joby-img joby-img-base"
+                data-index="0"
+                src="/images/pillar-fusion.png"
+                alt="Indian Fusion"
               />
-            ))}
-          </div>
-
-          {/* Dark gradient overlay — right side for text legibility */}
-          <div className="joby-overlay" />
-
-          {/* Dot nav — bottom left */}
-          <div ref={dotsContRef} className="joby-dots">
-            {pillars.map((_, i) => (
-              <div
-                key={i}
-                className={`joby-dot${i === 0 ? " active" : ""}`}
-                data-index={i}
+              <img
+                className="joby-img joby-img-layer"
+                data-index="1"
+                src="/images/pillar-sourced.png"
+                alt="Locally Sourced"
               />
-            ))}
-          </div>
-
-          {/* Text area — right side overlay */}
-          <div className="joby-text-area">
-            <div className="joby-category-stack">
-              {pillars.map((p, i) => (
-                <span
-                  key={i}
-                  ref={(el) => {
-                    catLabelsRef.current[i] = el;
-                  }}
-                  className="joby-cat-label"
-                  data-cat={i}
-                >
-                  {p.cat}
-                </span>
-              ))}
+              <img
+                className="joby-img joby-img-layer"
+                data-index="2"
+                src="/images/pillar-cocktails.png"
+                alt="Craft Cocktails"
+              />
+              <img
+                className="joby-img joby-img-layer"
+                data-index="3"
+                src="/images/pillar-dalston.png"
+                alt="Dalston Heart"
+              />
             </div>
 
-            <div ref={vertLineRef} className="joby-vert-line" />
+            {/* Gradient overlay for text legibility */}
+            <div className="joby-overlay" />
 
-            <div className="joby-text-panels">
-              {pillars.map((p, i) => (
-                <div
-                  key={i}
-                  ref={(el) => {
-                    panelsRef.current[i] = el;
-                  }}
-                  className="joby-panel"
-                  data-slide={i}
-                >
-                  <h2 className="joby-h">
-                    {p.headline.split("\n").map((line, li) => (
-                      <span key={li}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
-                  </h2>
-                  <p className="joby-p">{p.body}</p>
+            {/* Dot navigation — bottom left */}
+            <div className="joby-dots" id="jobyDots">
+              <div className="joby-dot active" data-index="0"></div>
+              <div className="joby-dot" data-index="1"></div>
+              <div className="joby-dot" data-index="2"></div>
+              <div className="joby-dot" data-index="3"></div>
+            </div>
+
+            {/* Text area — right side overlay */}
+            <div className="joby-text-area">
+              <div className="joby-category-stack">
+                <span className="joby-cat-label" data-cat="0">Indian Fusion</span>
+                <span className="joby-cat-label" data-cat="1">Locally Sourced</span>
+                <span className="joby-cat-label" data-cat="2">Craft Cocktails</span>
+                <span className="joby-cat-label" data-cat="3">Dalston Heart</span>
+              </div>
+              <div className="joby-vert-line"></div>
+
+              <div className="joby-text-panels">
+                <div className="joby-panel" data-slide="0">
+                  <h2 className="joby-h">Rooted in tradition, refined by innovation</h2>
+                  <p className="joby-p">Every dish at Rao&apos;s begins with respect — for the ingredients, the technique, and the centuries of culinary wisdom that inform our craft.</p>
                 </div>
-              ))}
+                <div className="joby-panel" data-slide="1">
+                  <h2 className="joby-h">Ingredients that speak for themselves</h2>
+                  <p className="joby-p">We source the finest seasonal produce from trusted local suppliers — letting quality do the work so every plate tells an honest story.</p>
+                </div>
+                <div className="joby-panel" data-slide="2">
+                  <h2 className="joby-h">A table where everyone belongs</h2>
+                  <p className="joby-p">From the first greeting to the last glass, Rao&apos;s is built around the belief that great food — and great drinks — bring people closer.</p>
+                </div>
+                <div className="joby-panel" data-slide="3">
+                  <h2 className="joby-h">Crafted by hand, served with heart</h2>
+                  <p className="joby-p">Our kitchen runs on intuition passed down through generations — recipes that can&apos;t be rushed, flavours that can&apos;t be replicated by shortcuts.</p>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }

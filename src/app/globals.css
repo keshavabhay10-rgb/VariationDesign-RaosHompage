@@ -176,218 +176,208 @@ body::after {
 /* ===== MAP FILTER ===== */
 .map-dark iframe {
   filter: grayscale(0.8) brightness(0.7) contrast(1.1);
+}
 
-  /* ===== JOBY PILLARS — SECTION 2 HALF 2 ===== */
-  .joby-scroll-spacer {
-    height: 500vh;
-    position: relative;
-  }
+/* ===== JOBY PILLARS — SECTION 2 HALF 2 ===== */
 
-  .joby-pinned {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background: #0d0d0d;
-    overflow: hidden;
-  }
+.joby-outer {
+  position: relative;
+}
 
-  /* Full-screen image stack */
-  .joby-image-wrap {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
+.joby-scroll-spacer {
+  height: 500vh;
+  position: relative;
+}
 
-  .joby-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    will-change: clip-path;
-  }
+/* Pinned container — full viewport, dark background */
+.joby-pinned {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #0D0D0D;
+  overflow: hidden;
+}
 
-  .joby-img-base {
-    z-index: 1;
-  }
-  .joby-img-layer[data-index="1"] {
-    z-index: 2;
-    clip-path: inset(100% 0 0 0);
-  }
-  .joby-img-layer[data-index="2"] {
-    z-index: 3;
-    clip-path: inset(100% 0 0 0);
-  }
-  .joby-img-layer[data-index="3"] {
-    z-index: 4;
-    clip-path: inset(100% 0 0 0);
-  }
+/* Full-screen image stack — covers entire pinned div */
+.joby-image-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
-  /* Gradient overlay — left clear, right dark for text */
-  .joby-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: linear-gradient(
-      to left,
-      rgba(13, 13, 13, 0.97) 0%,
-      rgba(13, 13, 13, 0.85) 35%,
-      rgba(13, 13, 13, 0.3) 65%,
-      transparent 100%
-    );
-    pointer-events: none;
-  }
+/* All images fill the full viewport absolutely */
+.joby-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: clip-path;
+}
 
-  /* Dot nav — bottom left, above overlay */
-  .joby-dots {
-    position: absolute;
-    left: 2.5rem;
-    bottom: 5vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    z-index: 10;
-    opacity: 0;
-  }
+/* Base image (slide 0) — always visible, bottom of stack */
+.joby-img-base {
+  z-index: 1;
+}
 
-  .joby-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transition: all 0.35s ease;
-  }
+/* Layer images — initially hidden via clip-path, GSAP reveals top-to-bottom */
+.joby-img-layer[data-index="1"] { z-index: 2; clip-path: inset(100% 0 0 0); }
+.joby-img-layer[data-index="2"] { z-index: 3; clip-path: inset(100% 0 0 0); }
+.joby-img-layer[data-index="3"] { z-index: 4; clip-path: inset(100% 0 0 0); }
 
-  .joby-dot.active {
-    width: 2px;
-    height: 22px;
-    border-radius: 1px;
-    background: #c9963b;
-  }
+/* Dark gradient overlay — makes right-side text readable over any image */
+.joby-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(
+    to left,
+    rgba(13, 13, 13, 0.95) 0%,
+    rgba(13, 13, 13, 0.80) 30%,
+    rgba(13, 13, 13, 0.30) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
 
-  /* Text area — right side, above overlay */
+/* Dot navigation — bottom left, above overlay */
+.joby-dots {
+  position: absolute;
+  left: 2.5rem;
+  bottom: 5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 10;
+  opacity: 0;
+}
+
+.joby-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transition: all 0.35s ease;
+}
+
+.joby-dot.active {
+  width: 2px;
+  height: 22px;
+  border-radius: 1px;
+  background: #C9963B;
+}
+
+/* Text area — right 42% of viewport, overlaid on image */
+.joby-text-area {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 42%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  padding: 0 4% 0 0;
+  z-index: 10;
+}
+
+/* Category label stack */
+.joby-category-stack {
+  position: absolute;
+  top: 8vh;
+  left: 0;
+  width: 5.5rem;
+  z-index: 5;
+}
+
+.joby-cat-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #C9963B;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+/* Vertical decorative line — grows from top via scaleY */
+.joby-vert-line {
+  position: absolute;
+  left: 6rem;
+  top: 8vh;
+  width: 1px;
+  height: 50%;
+  background: rgba(201, 150, 59, 0.5);
+  transform-origin: top center;
+  transform: scaleY(0);
+  will-change: transform;
+}
+
+/* Text panels container */
+.joby-text-panels {
+  position: relative;
+  flex: 1;
+  margin-left: 8rem;
+  margin-top: 8vh;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Individual text panel — stacked absolutely */
+.joby-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Headline */
+.joby-h {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 2.8vw, 3rem);
+  font-weight: 400;
+  color: #F5F0EB;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 420px;
+  will-change: transform, opacity;
+}
+
+/* Body text */
+.joby-p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #A0978E;
+  line-height: 1.7;
+  max-width: 380px;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .joby-scroll-spacer { height: auto; }
+  .joby-pinned { height: auto; min-height: 100vh; }
   .joby-text-area {
     position: absolute;
+    bottom: 0;
     right: 0;
-    top: 0;
-    width: 44%;
-    height: 100%;
-    display: flex;
-    align-items: stretch;
-    padding: 0 5% 0 0;
-    z-index: 10;
+    width: 100%;
+    height: auto;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, rgba(13,13,13,0.7) 70%, transparent 100%);
   }
-
-  .joby-category-stack {
-    position: absolute;
-    top: 8vh;
-    left: 0;
-    width: 6rem;
-    z-index: 5;
-  }
-
-  .joby-cat-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-family: var(--font-body, "DM Sans", sans-serif);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #c9963b;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0;
-    white-space: nowrap;
-  }
-
-  .joby-vert-line {
-    position: absolute;
-    left: 6.5rem;
-    top: 8vh;
-    width: 1px;
-    height: 45%;
-    background: #c9963b;
-    transform-origin: top center;
-    transform: scaleY(0);
-    will-change: transform;
-    opacity: 0.6;
-  }
-
-  .joby-text-panels {
-    position: relative;
-    flex: 1;
-    margin-left: 9rem;
-    margin-top: 8vh;
-    height: 100%;
-    min-width: 0;
-    overflow: hidden;
-  }
-
-  .joby-panel {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2rem;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .joby-h {
-    font-family: "Playfair Display", Georgia, serif;
-    font-size: clamp(1.8rem, 2.8vw, 3rem);
-    font-weight: 400;
-    color: #f5f0eb;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    max-width: 380px;
-    will-change: transform, opacity;
-  }
-
-  .joby-p {
-    font-family: "DM Sans", sans-serif;
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: #a0978e;
-    line-height: 1.7;
-    max-width: 360px;
-  }
-
-  @media (max-width: 767px) {
-    .joby-scroll-spacer {
-      height: auto;
-    }
-    .joby-pinned {
-      height: auto;
-      min-height: 100vh;
-    }
-    .joby-text-area {
-      position: relative;
-      width: 100%;
-      padding: 3rem 1.5rem;
-      margin-top: auto;
-      background: rgba(13, 13, 13, 0.8);
-    }
-    .joby-vert-line {
-      display: none;
-    }
-    .joby-text-panels {
-      margin-left: 0;
-      margin-top: 0;
-      position: relative;
-      min-height: 200px;
-    }
-    .joby-panel {
-      position: relative;
-      opacity: 1 !important;
-      pointer-events: auto !important;
-    }
-    .joby-dots {
-      display: none;
-    }
-  }
+  .joby-vert-line { display: none; }
+  .joby-text-panels { margin-left: 0; margin-top: 0; position: relative; min-height: 180px; }
+  .joby-panel { position: relative; opacity: 1 !important; pointer-events: auto !important; }
+  .joby-dots { display: none; }
 }
