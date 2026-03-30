@@ -1,168 +1,272 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
-import SoundToggle from "@/components/ui/SoundToggle";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function SizzlerSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const plateRef = useRef<HTMLDivElement>(null);
-  const steamRef = useRef<HTMLDivElement>(null);
-  const specsLeftRef = useRef<HTMLDivElement>(null);
-  const specsRightRef = useRef<HTMLDivElement>(null);
-  const textLeftRef = useRef<HTMLHeadingElement>(null);
-  const textRightRef = useRef<HTMLHeadingElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [soundEnabled, setSoundEnabled] = useState(false);
-  const [showSoundToggle, setShowSoundToggle] = useState(false);
+const cardData = [
+  {
+    name: "The Menu",
+    type: "Indian Fusion Cuisine",
+    highlights: "Tandoori, Biryani, Craft Cocktails",
+    experience: "Dine-in · Private Events · Takeaway",
+    year: "EST. 2022",
+    img: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=550&fit=crop",
+    alt: "The Menu",
+  },
+  {
+    name: "Cocktail Bar",
+    type: "Mixology & Spirits",
+    highlights: "Signature Blends, Indian-Inspired",
+    experience: "Walk-in · Late Night · Groups",
+    year: "DALSTON",
+    img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&h=550&fit=crop",
+    alt: "Cocktail Bar",
+  },
+  {
+    name: "Private Dining",
+    type: "Bespoke Experiences",
+    highlights: "Set Menus, Dedicated Space",
+    experience: "Birthdays · Corporate · Weddings",
+    year: "6–30 GUESTS",
+    img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=550&fit=crop",
+    alt: "Private Dining",
+  },
+  {
+    name: "Events",
+    type: "Celebrations & Gatherings",
+    highlights: "Seasonal, Cultural, Corporate",
+    experience: "Custom Packages · Full Service",
+    year: "ENQUIRE",
+    img: "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=550&fit=crop",
+    alt: "Events",
+  },
+  {
+    name: "Our Story",
+    type: "Dalston Since 2022",
+    highlights: "Locally Sourced, Sustainably Minded",
+    experience: "Tradition Meets Innovation",
+    year: "HACKNEY",
+    img: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=550&fit=crop",
+    alt: "Our Story",
+  },
+];
 
+const positions = {
+  farLeft:  { x: -1100, z: -500,  rotateY: 35,  rotateX: 2,   scale: 0.50, opacity: 0.15, brightness: 0.35 },
+  left:     { x: -620,  z: -300,  rotateY: 22,  rotateX: 2,   scale: 0.70, opacity: 0.60, brightness: 0.55 },
+  center:   { x: -30,   z: 0,     rotateY: -5,  rotateX: 1.5, scale: 1.00, opacity: 1.00, brightness: 1.00 },
+  right:    { x: 550,   z: -350,  rotateY: -25, rotateX: 2.5, scale: 0.65, opacity: 0.55, brightness: 0.45 },
+  farRight: { x: 1100,  z: -550,  rotateY: -40, rotateX: 3,   scale: 0.45, opacity: 0.10, brightness: 0.30 },
+};
+
+function getPositionForCard(activeIndex: number, cardIndex: number) {
+  const diff = cardIndex - activeIndex;
+  if (diff <= -2) return positions.farLeft;
+  if (diff === -1) return positions.left;
+  if (diff === 0)  return positions.center;
+  if (diff === 1)  return positions.right;
+  return positions.farRight;
+}
+
+export default function SizzlerSection() {
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
 
-    gsap.set(plateRef.current, { y: "100vh" });
-    gsap.set(specsLeftRef.current, { opacity: 0, y: 20 });
-    gsap.set(specsRightRef.current, { opacity: 0, y: 20 });
+    if (isMobile) {
+      // Mobile: IntersectionObserver updates metadata as user snaps through cards
+      const track = document.getElementById("qhTrack");
+      const cards = document.querySelectorAll(".qh-card");
+      if (!track) return;
 
-    if (!isMobile) {
-      const sizzlerTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1,
-          pin: sectionRef.current,
-          pinSpacing: false,
-          onEnter: () => setShowSoundToggle(true),
-          onLeave: () => { audioRef.current?.pause(); },
-          onEnterBack: () => {
-            if (soundEnabled && audioRef.current) {
-              audioRef.current.play().catch(() => {});
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+              const index = parseInt(
+                (entry.target as HTMLElement).dataset.index ?? "0",
+                10
+              );
+              const data = cardData[index];
+              const nameEl = document.querySelector("#qhMetaTitle .qh-meta-name");
+              const typeEl = document.getElementById("qhMetaType");
+              const hlEl   = document.getElementById("qhMetaHighlights");
+              const expEl  = document.getElementById("qhMetaExperience");
+              const yrEl   = document.getElementById("qhMetaYear");
+              if (nameEl) nameEl.textContent = data.name;
+              if (typeEl) typeEl.textContent = data.type;
+              if (hlEl)   hlEl.textContent   = data.highlights;
+              if (expEl)  expEl.textContent  = data.experience;
+              if (yrEl)   yrEl.textContent   = data.year;
             }
-          },
-          onLeaveBack: () => { audioRef.current?.pause(); },
+          });
+        },
+        { root: track.parentElement, threshold: 0.5 }
+      );
+      cards.forEach((card) => observer.observe(card));
+      return () => observer.disconnect();
+    }
+
+    // Desktop: full GSAP 3D scroll timeline
+    const cards = Array.from(
+      document.querySelectorAll("#qhSection .qh-card")
+    ) as HTMLElement[];
+    const totalCards = cards.length;
+
+    // Set initial state: card 0 centered, others positioned in 3D space
+    cards.forEach((card, i) => {
+      const pos = getPositionForCard(0, i);
+      gsap.set(card, {
+        x: pos.x,
+        z: pos.z,
+        rotateY: pos.rotateY,
+        rotateX: pos.rotateX,
+        scale: pos.scale,
+        opacity: pos.opacity,
+        filter: `brightness(${pos.brightness})`,
+        transformPerspective: 1200,
+      });
+    });
+
+    let currentActiveIndex = 0;
+
+    function updateMeta(index: number) {
+      if (index === currentActiveIndex) return;
+      currentActiveIndex = index;
+      const data = cardData[index];
+      const meta = document.getElementById("qhMeta");
+      if (!meta) return;
+      const targets = meta.querySelectorAll(
+        ".qh-meta-value, .qh-meta-name, .qh-meta-year"
+      );
+      gsap.to(targets, {
+        opacity: 0,
+        duration: 0.15,
+        onComplete: () => {
+          const nameEl = document.querySelector("#qhMetaTitle .qh-meta-name");
+          const typeEl = document.getElementById("qhMetaType");
+          const hlEl   = document.getElementById("qhMetaHighlights");
+          const expEl  = document.getElementById("qhMetaExperience");
+          const yrEl   = document.getElementById("qhMetaYear");
+          if (nameEl) nameEl.textContent = data.name;
+          if (typeEl) typeEl.textContent = data.type;
+          if (hlEl)   hlEl.textContent   = data.highlights;
+          if (expEl)  expEl.textContent  = data.experience;
+          if (yrEl)   yrEl.textContent   = data.year;
+          gsap.to(targets, { opacity: 1, duration: 0.2 });
         },
       });
+    }
 
-      sizzlerTl
-        .to(plateRef.current, { y: 0, duration: 0.4, ease: "power2.out" }, 0)
-        .to(textLeftRef.current, { opacity: 0.9, duration: 0.2, ease: "none" }, 0.1)
-        .to(textRightRef.current, { opacity: 0.9, duration: 0.2, ease: "none" }, 0.1)
-        .to(steamRef.current, { opacity: 1, duration: 0.15, ease: "none" }, 0.2)
-        .to(specsLeftRef.current, { opacity: 1, y: 0, duration: 0.15, ease: "none" }, 0.25)
-        .to(specsRightRef.current, { opacity: 1, y: 0, duration: 0.15, ease: "none" }, 0.28)
-        .to({}, { duration: 0.6 }, 0.4);
-    } else {
-      gsap.set(plateRef.current, { y: 80 });
-      gsap.to(plateRef.current, {
-        y: 0, opacity: 1, duration: 1,
-        scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+    const stepDuration = 1 / (totalCards - 1); // 0.25 for 5 cards
+
+    const qhTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".qh-container",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1.5,
+        pin: "#qhSection",
+        pinSpacing: false,
+        onUpdate: (self) => {
+          const activeIndex = Math.min(
+            totalCards - 1,
+            Math.floor(self.progress * totalCards)
+          );
+          updateMeta(activeIndex);
+        },
+      },
+    });
+
+    // Build timeline: transition every card through each step
+    for (let step = 0; step < totalCards - 1; step++) {
+      const startTime = step * stepDuration;
+      cards.forEach((card, cardIndex) => {
+        const fromPos = getPositionForCard(step,     cardIndex);
+        const toPos   = getPositionForCard(step + 1, cardIndex);
+        qhTl.fromTo(
+          card,
+          {
+            x: fromPos.x,
+            z: fromPos.z,
+            rotateY: fromPos.rotateY,
+            rotateX: fromPos.rotateX,
+            scale: fromPos.scale,
+            opacity: fromPos.opacity,
+            filter: `brightness(${fromPos.brightness})`,
+            transformPerspective: 1200,
+          },
+          {
+            x: toPos.x,
+            z: toPos.z,
+            rotateY: toPos.rotateY,
+            rotateX: toPos.rotateX,
+            scale: toPos.scale,
+            opacity: toPos.opacity,
+            filter: `brightness(${toPos.brightness})`,
+            transformPerspective: 1200,
+            duration: stepDuration,
+            ease: "none",
+          },
+          startTime
+        );
       });
-      setShowSoundToggle(true);
     }
 
     return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      qhTl.kill();
+      ScrollTrigger.getAll()
+        .filter((st) => st.vars.trigger === ".qh-container")
+        .forEach((st) => st.kill());
     };
-  }, [soundEnabled]);
-
-  const toggleSound = () => {
-    const next = !soundEnabled;
-    setSoundEnabled(next);
-    if (audioRef.current) {
-      if (next) {
-        audioRef.current.play().catch(() => {});
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  };
+  }, []);
 
   return (
-    <section ref={containerRef} className="h-[400vh] relative" id="sizzler">
-      <div ref={sectionRef} className="relative w-full h-screen bg-bg-secondary overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center_bottom,rgba(201,150,59,0.08)_0%,transparent_60%)]" />
+    <section className="qh-container" id="experience">
+      <div className="qh-section" id="qhSection">
 
-        {/* Flanking text */}
-        <div className="absolute left-[5%] top-[22%] z-[3]">
-          <h2 ref={textLeftRef} className="font-display text-[clamp(2.5rem,5.5vw,5rem)] font-bold text-text-primary opacity-[0.15]">
-            Taste the
-          </h2>
-        </div>
-        <div className="absolute right-[5%] top-[22%] text-right z-[3]">
-          <h2 ref={textRightRef} className="font-display text-[clamp(2.5rem,5.5vw,5rem)] font-bold italic text-gold opacity-[0.15]">
-            Experience
-          </h2>
-        </div>
+        {/* 3D environment background */}
+        <div className="qh-environment" />
 
-        {/* Sizzler plate */}
-        <div ref={plateRef} className="relative z-[5] w-[380px] max-lg:w-[320px] max-md:w-[200px] h-auto max-h-[80vh] overflow-visible rounded-lg drop-shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
-          <Image
-            src="/images/sizzler-dish.png"
-            alt="Signature tandoori sizzler dish with smoke"
-            width={380}
-            height={600}
-            className="w-full h-auto object-contain rounded-lg bg-bg-secondary"
-            priority
-          />
-        </div>
-
-        {/* Steam wisps */}
-        <div ref={steamRef} className="absolute z-[6] w-[340px] h-[300px] left-1/2 top-[15%] -translate-x-1/2 pointer-events-none opacity-0">
-          <div className="steam-wisp absolute left-[30%] animate-wisp-1" />
-          <div className="steam-wisp absolute left-[50%] animate-wisp-2" />
-          <div className="steam-wisp absolute left-[70%] animate-wisp-3" />
-          <div className="steam-wisp absolute left-[40%] animate-wisp-4" />
-          <div className="steam-wisp absolute left-[60%] animate-wisp-5" />
-        </div>
-
-        {/* Dish specs left */}
-        <div ref={specsLeftRef} className="absolute z-[6] left-[5%] bottom-[12%] max-w-[280px] max-lg:hidden">
-          <h3 className="font-display text-2xl font-semibold text-gold mb-2">Tandoori Sizzler</h3>
-          <p className="text-sm text-text-secondary leading-[1.7] mb-3">
-            Chef&apos;s signature creation. Marinated overnight in house-ground spices,
-            charred in our tandoor, served on a cast-iron plate.
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            <span className="text-[0.65rem] tracking-[0.1em] uppercase px-3 py-1 border border-gold/30 rounded-full text-gold">
-              Kashmiri Chilli
-            </span>
-            <span className="text-[0.65rem] tracking-[0.1em] uppercase px-3 py-1 border border-gold/30 rounded-full text-gold">
-              Garam Masala
-            </span>
+        {/* 3D cards container */}
+        <div className="qh-cards-perspective">
+          <div className="qh-cards-track" id="qhTrack">
+            {cardData.map((card, i) => (
+              <div key={i} className="qh-card" data-index={i}>
+                <div className="qh-card-inner">
+                  <img src={card.img} alt={card.alt} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Dish specs right */}
-        <div ref={specsRightRef} className="absolute z-[6] right-[5%] bottom-[12%] max-w-[280px] text-right max-lg:hidden">
-          <h3 className="font-display text-2xl font-semibold text-gold italic mb-2">Chef&apos;s Note</h3>
-          <p className="text-sm text-text-secondary leading-[1.7] mb-3">
-            This dish is a celebration of fire and flavour — the sizzle tells the story
-            before the first bite.
-          </p>
-          <div className="flex gap-2 flex-wrap justify-end">
-            <span className="text-[0.65rem] tracking-[0.1em] uppercase px-3 py-1 border border-gold/30 rounded-full text-gold">GF</span>
-            <span className="text-[0.65rem] tracking-[0.1em] uppercase px-3 py-1 border border-gold/30 rounded-full text-gold">Signature</span>
-            <span className="text-[0.65rem] tracking-[0.1em] uppercase px-3 py-1 border border-gold/30 rounded-full text-gold">£18.95</span>
+        {/* Metadata row */}
+        <div className="qh-meta" id="qhMeta">
+          <div className="qh-meta-title" id="qhMetaTitle">
+            <span className="qh-meta-name">The Menu</span>
+            <svg className="qh-meta-arrow" viewBox="0 0 24 24" width="18" height="18">
+              <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" strokeWidth="2" fill="none" />
+            </svg>
           </div>
+          <div className="qh-meta-col">
+            <span className="qh-meta-label">TYPE</span>
+            <span className="qh-meta-value" id="qhMetaType">Indian Fusion Cuisine</span>
+          </div>
+          <div className="qh-meta-col">
+            <span className="qh-meta-label">HIGHLIGHTS</span>
+            <span className="qh-meta-value" id="qhMetaHighlights">Tandoori, Biryani, Craft Cocktails</span>
+          </div>
+          <div className="qh-meta-col">
+            <span className="qh-meta-label">EXPERIENCE</span>
+            <span className="qh-meta-value" id="qhMetaExperience">Dine-in · Private Events · Takeaway</span>
+          </div>
+          <div className="qh-meta-year" id="qhMetaYear">EST. 2022</div>
         </div>
 
-        {/* Audio */}
-        <audio ref={audioRef} loop preload="auto">
-          <source src="/audio/sizzle-sound.mp3" type="audio/mpeg" />
-        </audio>
       </div>
-
-      {/* Sound toggle */}
-      <SoundToggle
-        visible={showSoundToggle}
-        active={soundEnabled}
-        onToggle={toggleSound}
-      />
     </section>
   );
 }
