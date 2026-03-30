@@ -592,9 +592,6 @@ export default function WelcomeSection() {
               />
             </div>
 
-            {/* Gradient overlay for text legibility */}
-            <div className="joby-overlay" />
-
             {/* Dot navigation — bottom left */}
             <div className="joby-dots" id="jobyDots">
               <div className="joby-dot active" data-index="0"></div>

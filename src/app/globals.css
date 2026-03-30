@@ -235,22 +235,7 @@ nav.nav-visible {
 .joby-img-layer[data-index="2"] { z-index: 3; clip-path: inset(100% 0 0 0); }
 .joby-img-layer[data-index="3"] { z-index: 4; clip-path: inset(100% 0 0 0); }
 
-/* Dark gradient overlay — makes right-side text readable over any image */
-.joby-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  background: linear-gradient(
-    to left,
-    rgba(13, 13, 13, 0.95) 0%,
-    rgba(13, 13, 13, 0.80) 30%,
-    rgba(13, 13, 13, 0.30) 60%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
-/* Dot navigation — bottom left, above overlay */
+/* Dot navigation — bottom left, above images */
 .joby-dots {
   position: absolute;
   left: 2.5rem;
@@ -294,7 +279,8 @@ nav.nav-visible {
 /* Category label stack */
 .joby-category-stack {
   position: absolute;
-  top: 8vh;
+  top: 50%;
+  transform: translateY(-50%);
   left: 0;
   width: 5.5rem;
   z-index: 5;
@@ -318,9 +304,9 @@ nav.nav-visible {
 .joby-vert-line {
   position: absolute;
   left: 6rem;
-  top: 8vh;
+  top: 20%;
   width: 1px;
-  height: 50%;
+  height: 60%;
   background: rgba(201, 150, 59, 0.5);
   transform-origin: top center;
   transform: scaleY(0);
@@ -332,7 +318,7 @@ nav.nav-visible {
   position: relative;
   flex: 1;
   margin-left: 8rem;
-  margin-top: 8vh;
+  margin-top: 0;
   height: 100%;
   min-width: 0;
   overflow: hidden;
@@ -344,7 +330,8 @@ nav.nav-visible {
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 2.5rem;
   opacity: 0;
   pointer-events: none;
 }

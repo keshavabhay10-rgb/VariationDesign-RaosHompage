@@ -23,7 +23,10 @@ export default function Navbar() {
     const SCROLL_UP_THRESHOLD = 5;
     const MOUSE_ZONE = 8;
     const HIDE_DELAY = 300;
-    const MIN_SCROLL = 50;
+    const heroSection = document.getElementById('home');
+    const MIN_SCROLL = heroSection
+      ? heroSection.offsetTop + heroSection.offsetHeight - window.innerHeight
+      : window.innerHeight * 2.5;
 
     let lastY = window.scrollY;
     let hidden = false;
