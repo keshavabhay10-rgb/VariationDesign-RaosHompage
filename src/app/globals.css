@@ -1,6 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Truculenta:opsz,wght@12..72,100;12..72,200;12..72,300;12..72,400;12..72,500;12..72,600;12..72,700;12..72,800;12..72,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===== SECTION 4 FONTS ===== */
+@font-face {
+  font-family: 'Bluu Next';
+  src: url('/fonts/bluu-next/BluuNext-Bold.otf') format('opentype'),
+       url('/fonts/BluuNext-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bluu Next';
+  src: url('/fonts/bluu-next/BluuNext-Bolditalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
 
 /* ===== BASE ===== */
 html {

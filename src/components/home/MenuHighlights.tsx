@@ -1,108 +1,150 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
-import Link from "next/link";
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useMotionValue, useTransform, useMotionValueEvent } from 'framer-motion';
+import styles from './section4.module.css';
+import { TimeOfDayTimeline } from './TimeOfDayTimeline';
+import { JourneySubsection } from './JourneySubsection';
 
-gsap.registerPlugin(ScrollTrigger);
+const AFTERNOON_DISHES = [
+    { name: 'Hyderabadi Biryani',  description: 'Slow-cooked dum, saffron-kissed layers',                  image: '/menu/HyderabadiDumBiryani.png' },
+    { name: 'Vegetable Pulao',     description: 'Fragrant basmati with seasonal garden vegetables',          image: '/menu/VegPulao.png' },
+    { name: 'Egg Fried Rice',      description: 'Wok-tossed with egg, spring onion, soy',                  image: '/menu/EggFriedRice.png' },
+    { name: 'Curd Rice',           description: 'Cool, tempered yogurt rice with mustard seeds',            image: '/menu/CurdRice.png' },
+    { name: 'Chana Masala',        description: 'A complete meal — dal, sabzi, rice, roti, sides',          image: '/menu/ChannaMasala.png' },
+    { name: 'Lemon Rice',          description: 'Tangy, turmeric-tempered South Indian rice',               image: '/menu/LemonRice.png' },
+];
 
-const dishes = [
-  {
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&h=350&fit=crop",
-    category: "Curries",
-    name: "Butter Chicken",
-    desc: "Tender chicken in a rich, creamy tomato sauce with aromatic spices and a touch of fenugreek.",
-    price: "£14.95",
-    tags: ["GF"],
-  },
-  {
-    image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500&h=350&fit=crop",
-    category: "Biryani & Rice",
-    name: "Lamb Dum Biryani",
-    desc: "Slow-cooked lamb layered with fragrant basmati, saffron, and caramelised onions sealed in dough.",
-    price: "£16.95",
-    tags: ["GF"],
-  },
-  {
-    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&h=350&fit=crop",
-    category: "Tandoori & Grill",
-    name: "Paneer Tikka",
-    desc: "Marinated cottage cheese grilled in our clay tandoor, served with mint chutney and pickled onions.",
-    price: "£11.95",
-    tags: ["V", "GF"],
-  },
+const EVENING_DISHES = [
+    { name: 'Onion Pakora',        description: 'Crisp-fried, spiced, golden',                              image: '/menu/PakoraPlatter.png' },
+    { name: 'Veg Samosa',          description: 'Flaky pastry, spiced potato-pea filling',                  image: '/menu/VegSamosa.png' },
+    { name: 'Palak Paneer',        description: 'Creamy spinach, soft paneer, fragrant spices',             image: '/menu/PalakPaneer.png' },
+    { name: 'Masala Chai',         description: 'Cardamom, ginger, simmered milk',                          image: '/menu/MasalaChai.jpeg' },
+    { name: 'Gobi Manchurian',     description: 'Crispy cauliflower, tangy Indo-Chinese glaze',             image: '/menu/GobiManchurian.png' },
+    { name: 'Paneer 65',           description: 'Spice-crusted, golden-fried, fiery',                       image: '/menu/Paneer65.png' },
+];
+
+const NIGHT_DISHES = [
+    { name: 'Dal Makhani',         description: 'Overnight-simmered black lentils, cream finish',           image: '/menu/DalMakhni.png' },
+    { name: 'Tandoori Roti',       description: 'Whole wheat, smoky clay-oven blistered',                   image: '/menu/TandooriRoti.png' },
+    { name: 'Butter Chicken',      description: 'Tender tikka in velvety tomato-cream sauce',               image: '/menu/PaneerButterMasala.png' },
+    { name: 'Kadai Paneer',        description: 'Smoky bell pepper, crumbled spice, wok-charred',           image: '/menu/KadaiPaneer.png' },
+    { name: 'Butter Naan',         description: 'Soft, buttery, fresh from the tandoor',                    image: '/menu/ButterNaan.png' },
 ];
 
 export default function MenuHighlights() {
-  const gridRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
+    const [activePeriod, setActivePeriod] = useState<'afternoon' | 'evening' | 'night'>('afternoon');
 
-  useEffect(() => {
-    const cards = gridRef.current?.querySelectorAll(".menu-card");
-    if (cards) {
-      gsap.to(cards, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.15,
-        ease: "power2.out",
-        scrollTrigger: { trigger: gridRef.current, start: "top 80%" },
-      });
-    }
-  }, []);
+    // Manual scroll tracking — bypasses Framer Motion's layout-time measurement,
+    // which is distorted by the preceding GSAP pinSpacing:false sections.
+    // getBoundingClientRect() at scroll time always reads the live position.
+    const scrollYProgress = useMotionValue(0);
 
-  return (
-    <section className="py-32 px-8 bg-bg-primary relative" id="menu">
-      <div className="text-center mb-16">
-        <span className="text-xs tracking-[0.2em] uppercase text-gold block mb-3">Our Menu</span>
-        <h2 className="font-display text-[clamp(2rem,3.5vw,3rem)] font-semibold text-text-primary">
-          Curated for Every Palate
-        </h2>
-      </div>
+    useEffect(() => {
+        const updateProgress = () => {
+            const section = sectionRef.current;
+            if (!section) return;
 
-      <div ref={gridRef} className="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-8 max-w-[1100px] max-md:max-w-[400px] mx-auto">
-        {dishes.map((dish, i) => (
-          <div
-            key={i}
-            className="menu-card bg-bg-card rounded-xl overflow-hidden border border-white/5 opacity-0 translate-y-[40px] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all duration-400"
-          >
-            <div className="h-[220px] overflow-hidden">
-              <Image
-                src={dish.image}
-                alt={dish.name}
-                width={500}
-                height={350}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-600"
-              />
-            </div>
-            <div className="p-6">
-              <span className="text-[0.65rem] tracking-[0.15em] uppercase text-gold block mb-2">{dish.category}</span>
-              <h3 className="font-display text-xl font-semibold text-text-primary mb-2">{dish.name}</h3>
-              <p className="text-sm text-text-secondary leading-relaxed mb-3">{dish.desc}</p>
-              <div className="flex justify-between items-center">
-                <span className="font-display text-xl font-semibold text-gold">{dish.price}</span>
-                <div className="flex gap-1.5">
-                  {dish.tags.map((tag) => (
-                    <span key={tag} className="text-[0.6rem] tracking-[0.08em] px-2 py-1 border border-gold/25 rounded text-gold">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            const rect = section.getBoundingClientRect();
+            const sectionHeight = section.offsetHeight;
+            const viewportHeight = window.innerHeight;
 
-      <div className="text-center mt-12">
-        <Link
-          href="/menu"
-          className="inline-block text-sm tracking-[0.12em] uppercase font-semibold text-gold border border-gold px-10 py-3.5 rounded hover:bg-gold hover:text-bg-primary transition-all duration-300"
+            // Progress 0: section top at viewport top
+            // Progress 1: section bottom at viewport bottom
+            const scrolled = -rect.top;
+            const scrollable = sectionHeight - viewportHeight;
+
+            if (scrollable <= 0) return;
+
+            const progress = Math.min(1, Math.max(0, scrolled / scrollable));
+            scrollYProgress.set(progress);
+        };
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        // Run once immediately to set initial state
+        updateProgress();
+
+        return () => window.removeEventListener('scroll', updateProgress);
+    }, [scrollYProgress]);
+
+    // Period tracking from the live MotionValue
+    useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+        if (latest < 0.44)       setActivePeriod('afternoon');
+        else if (latest < 0.72)  setActivePeriod('evening');
+        else                     setActivePeriod('night');
+    });
+
+    // Derived opacity/position values — all driven by the manually-set MotionValue
+    const sectionOpacity = useTransform(scrollYProgress, [0, 0.04], [0, 1]);
+    const headerOpacity  = useTransform(scrollYProgress, [0, 0.05, 0.10, 0.15], [0, 1, 1, 0]);
+    const headerY        = useTransform(scrollYProgress, [0, 0.05, 0.10, 0.15], [20, 0, 0, -20]);
+
+    return (
+        <section
+            ref={sectionRef}
+            id="menu-highlights"
+            data-section-name="time-of-day"
+            className={styles.sectionWrapper}
+            style={{ height: '1200vh' }}
         >
-          View Full Menu
-        </Link>
-      </div>
-    </section>
-  );
+            <div className={styles.stickyViewport}>
+                <motion.div
+                    style={{
+                        opacity: sectionOpacity,
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative',
+                    }}
+                >
+                    <TimeOfDayTimeline activeSection={activePeriod} />
+
+                    <div className={styles.contentArea}>
+                        <motion.div
+                            className={styles.mainHeader}
+                            style={{
+                                opacity: headerOpacity,
+                                y: headerY,
+                                top: '40%',
+                                position: 'absolute',
+                                left: 120,
+                                right: 120,
+                            }}
+                        >
+                            <h2>Taste the Map of India — From Afternoon to Starlight</h2>
+                        </motion.div>
+
+                        <JourneySubsection
+                            title="Afternoon Feasts"
+                            description="Biryani, pulao, thalis — made for sharing, built for hunger."
+                            dishes={AFTERNOON_DISHES}
+                            scrollProgress={scrollYProgress}
+                            visibilityRange={[0.12, 0.16, 0.40, 0.44]}
+                            cardScrollRange={[0.16, 0.36]}
+                        />
+
+                        <JourneySubsection
+                            title="Evening Snacks"
+                            description="Pakoras, samosas, chai — slow down, savor the moment."
+                            dishes={EVENING_DISHES}
+                            scrollProgress={scrollYProgress}
+                            visibilityRange={[0.44, 0.48, 0.68, 0.72]}
+                            cardScrollRange={[0.48, 0.65]}
+                        />
+
+                        <JourneySubsection
+                            title="Night Traditions"
+                            description="Naan, curries, tandoor — linger over flavors that travel generations."
+                            dishes={NIGHT_DISHES}
+                            scrollProgress={scrollYProgress}
+                            visibilityRange={[0.72, 0.76, 0.95, 0.98]}
+                            cardScrollRange={[0.76, 0.92]}
+                        />
+                    </div>
+                </motion.div>
+            </div>
+        </section>
+    );
 }
