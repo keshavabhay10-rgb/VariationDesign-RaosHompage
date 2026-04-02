@@ -8,7 +8,11 @@ import { DishCard } from './DishCard';
 interface Dish {
     name: string;
     description: string;
-    image: string;
+    image?: string;
+    price: string;
+    isChefsPick?: boolean;
+    dietary?: string[];
+    contains?: string;
 }
 
 interface JourneySubsectionProps {
@@ -18,6 +22,7 @@ interface JourneySubsectionProps {
     scrollProgress: MotionValue<number>;
     visibilityRange: [number, number, number, number];
     cardScrollRange: [number, number];
+    stayVisible?: boolean;
 }
 
 export function JourneySubsection({
@@ -27,6 +32,7 @@ export function JourneySubsection({
     scrollProgress,
     visibilityRange,
     cardScrollRange,
+    stayVisible,
 }: JourneySubsectionProps) {
     const trackRef = useRef<HTMLDivElement>(null);
     const [trackWidth, setTrackWidth] = useState(0);
@@ -46,13 +52,24 @@ export function JourneySubsection({
         return () => observer.disconnect();
     }, []);
 
-    const opacity = useTransform(scrollProgress, visibilityRange, [0, 1, 1, 0]);
-    const display = useTransform(scrollProgress, v =>
-        v >= visibilityRange[0] - 0.05 && v <= visibilityRange[3] + 0.05 ? 'flex' : 'none'
+    // stayVisible: push fade-out keyframes far beyond 1.0 so the section never disappears
+    const fadeOutStart = stayVisible ? 2.0 : visibilityRange[2];
+    const fadeOutEnd   = stayVisible ? 2.0 : visibilityRange[3];
+    const opacity = useTransform(
+        scrollProgress,
+        [visibilityRange[0], visibilityRange[1], fadeOutStart, fadeOutEnd],
+        [0, 1, 1, 0]
     );
 
-    const rangeStart = cardScrollRange[0];
-    const rangeEnd = cardScrollRange[1];
+    const display = useTransform(scrollProgress, v => {
+        if (stayVisible) {
+            return v >= visibilityRange[0] - 0.05 ? 'flex' : 'none';
+        }
+        return (v >= visibilityRange[0] - 0.05 && v <= visibilityRange[3] + 0.05) ? 'flex' : 'none';
+    });
+
+    const rangeStart    = cardScrollRange[0];
+    const rangeEnd      = cardScrollRange[1];
     const rangeDuration = rangeEnd - rangeStart;
 
     const scrollBegin  = rangeStart + rangeDuration * 0.20;
@@ -93,6 +110,10 @@ export function JourneySubsection({
                             name={dish.name}
                             description={dish.description}
                             image={dish.image}
+                            price={dish.price}
+                            isChefsPick={dish.isChefsPick}
+                            dietary={dish.dietary}
+                            contains={dish.contains}
                             scrollProgress={scrollProgress}
                             fadeRange={i >= 3 ? fadeDishRanges[i - 3] : undefined}
                         />

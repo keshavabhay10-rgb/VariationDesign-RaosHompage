@@ -30,8 +30,15 @@ export default function Home() {
             ScrollTrigger.sort();
 
             requestAnimationFrame(() => {
-              // Final refresh after all pins are registered
-              ScrollTrigger.refresh();
+              requestAnimationFrame(() => {
+                // Sizzler (Section 5) deferred sort
+                ScrollTrigger.sort();
+
+                requestAnimationFrame(() => {
+                  // Final refresh after all pins are registered
+                  ScrollTrigger.refresh();
+                });
+              });
             });
           });
         });

@@ -1,63 +1,55 @@
 'use client';
 
 import React from 'react';
+import { motion, MotionValue, useTransform } from 'framer-motion';
 import styles from './section4.module.css';
-import { cn } from '@/lib/cn';
 
-type TimePeriod = 'afternoon' | 'evening' | 'night';
+type MenuCategory =
+    | 'starters'
+    | 'tandoori_grill'
+    | 'curries'
+    | 'biryani_rice'
+    | 'vegetarian'
+    | 'indo_chinese'
+    | 'breads'
+    | 'desserts'
+    | 'cocktails_drinks';
 
-interface TimelineProps {
-    activeSection: TimePeriod;
+interface HorizontalNavProps {
+    activeSection: MenuCategory;
+    scrollProgress: MotionValue<number>;
 }
 
-const SunIcon = ({ active }: { active: boolean }) => (
-    <img
-        src="/icons/sun-transparent.png"
-        alt="Afternoon"
-        className={cn(styles.timelineIcon, active && styles.timelineIconActive)}
-    />
-);
+const TABS: { id: MenuCategory; label: string }[] = [
+    { id: 'starters',         label: 'Starters' },
+    { id: 'tandoori_grill',   label: 'Tandoori & Grill' },
+    { id: 'curries',          label: 'Curries' },
+    { id: 'biryani_rice',     label: 'Biryani & Rice' },
+    { id: 'vegetarian',       label: 'Vegetarian' },
+    { id: 'indo_chinese',     label: 'Indo Chinese' },
+    { id: 'breads',           label: 'Breads' },
+    { id: 'desserts',         label: 'Desserts' },
+    { id: 'cocktails_drinks', label: 'Cocktails & Drinks' },
+];
 
-const SunMoonIcon = ({ active }: { active: boolean }) => (
-    <img
-        src="/icons/dusk-transparent.png"
-        alt="Evening"
-        className={cn(styles.timelineIcon, active && styles.timelineIconActive)}
-    />
-);
+export function TimeOfDayTimeline({ activeSection, scrollProgress }: HorizontalNavProps) {
+    // Gold progress bar tracks overall section scroll 0→100%
+    const barWidth = useTransform(scrollProgress, [0, 1], ['0%', '100%']);
 
-const MoonIcon = ({ active }: { active: boolean }) => (
-    <img
-        src="/icons/moon-transparent.png"
-        alt="Night"
-        className={cn(styles.timelineIcon, active && styles.timelineIconActive)}
-    />
-);
-
-export function TimeOfDayTimeline({ activeSection }: TimelineProps) {
     return (
-        <div className={styles.timeline}>
-            <div className={styles.timelineTrack}>
-                <div className={styles.timelineNode}>
-                    <SunIcon active={activeSection === 'afternoon'} />
-                    <span className={cn(styles.label, activeSection === 'afternoon' && styles.labelActive)}>
-                        Afternoon
+        <div className={styles.categoryNav}>
+            <div className={styles.categoryNavScroll}>
+                {TABS.map((tab) => (
+                    <span
+                        key={tab.id}
+                        className={`${styles.categoryTab} ${activeSection === tab.id ? styles.categoryTabActive : ''}`}
+                    >
+                        {tab.label}
                     </span>
-                </div>
-                <div className={cn(styles.timelineLine, activeSection === 'afternoon' && styles.lineActive)} />
-                <div className={styles.timelineNode}>
-                    <SunMoonIcon active={activeSection === 'evening'} />
-                    <span className={cn(styles.label, activeSection === 'evening' && styles.labelActive)}>
-                        Evening
-                    </span>
-                </div>
-                <div className={cn(styles.timelineLine, activeSection === 'evening' && styles.lineActive)} />
-                <div className={styles.timelineNode}>
-                    <MoonIcon active={activeSection === 'night'} />
-                    <span className={cn(styles.label, activeSection === 'night' && styles.labelActive)}>
-                        Night
-                    </span>
-                </div>
+                ))}
+            </div>
+            <div className={styles.progressBarTrack}>
+                <motion.div className={styles.progressBar} style={{ width: barWidth }} />
             </div>
         </div>
     );
