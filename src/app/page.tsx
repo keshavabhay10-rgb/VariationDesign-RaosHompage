@@ -8,8 +8,7 @@ import WelcomeSection from "@/components/home/WelcomeSection";
 import SizzlerSection from "@/components/home/SizzlerSection";
 import MenuHighlights from "@/components/home/MenuHighlights";
 import ReviewsSection from "@/components/home/ReviewsSection";
-import EventsTeaser from "@/components/home/EventsTeaser";
-import ContactSection from "@/components/home/ContactSection";
+import AmbianceGallery from "@/components/home/AmbianceGallery";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,15 +29,8 @@ export default function Home() {
             ScrollTrigger.sort();
 
             requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                // Sizzler (Section 5) deferred sort
-                ScrollTrigger.sort();
-
-                requestAnimationFrame(() => {
-                  // Final refresh after all pins are registered
-                  ScrollTrigger.refresh();
-                });
-              });
+              // Final refresh after all pins are registered
+              ScrollTrigger.refresh();
             });
           });
         });
@@ -53,8 +45,7 @@ export default function Home() {
       <SizzlerSection />
       <MenuHighlights />
       <ReviewsSection />
-      <EventsTeaser />
-      <ContactSection />
+      <AmbianceGallery />
     </>
   );
 }

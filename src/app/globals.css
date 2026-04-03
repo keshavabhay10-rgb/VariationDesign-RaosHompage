@@ -811,3 +811,10 @@ nav.nav-visible {
   .sizzler-text-left,
   .sizzler-text-right { display: none; }
 }
+
+/* Reviews section — hide glassmorphic cards on mobile */
+@media (max-width: 767px) {
+  .rv-hide-mobile {
+    display: none !important;
+  }
+}
