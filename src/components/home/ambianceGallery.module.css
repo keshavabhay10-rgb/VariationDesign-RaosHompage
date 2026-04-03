@@ -1,7 +1,7 @@
 /* ─── Section Wrapper ────────────────────────────────────────────────────── */
 .sectionWrapper {
   position: relative;
-  background: #0a0a0a;
+  background: #090D1A;
   padding: 60px 40px;
   min-height: 90vh;
   display: flex;
@@ -19,20 +19,21 @@
 }
 
 .headerTitle {
-  font-family: "Playfair Display", Georgia, serif;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 300;
   font-size: clamp(1.8rem, 3.5vw, 3rem);
-  color: #C9963B;
+  color: #C4D4F0;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   margin-bottom: 12px;
 }
 
 .headerSubtitle {
-  font-family: "DM Sans", sans-serif;
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-weight: 500;
   font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-  color: #999;
+  letter-spacing: 0.08em;
+  color: #5C6A8A;
 }
 
 /* ─── Gallery Container ──────────────────────────────────────────────────── */
@@ -118,9 +119,11 @@
 }
 
 .panelOverlayText {
-  font-family: "DM Sans", sans-serif;
-  font-size: 1rem;
-  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: #E8EEFF;
   white-space: nowrap;
 }
 

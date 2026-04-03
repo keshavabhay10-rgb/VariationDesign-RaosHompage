@@ -311,7 +311,7 @@ export default function WelcomeSection() {
           width: 2,
           height: 22,
           borderRadius: 1,
-          background: "#C9963B",
+          background: "#FF6B2B",
           duration: 0.02,
         },
         startPos + 0.05,
@@ -435,7 +435,7 @@ export default function WelcomeSection() {
       <section
         ref={sectionRef}
         id="welcome-frames"
-        style={{ height: "600vh", position: "relative", background: "#0D0D0D" }}
+        style={{ height: "600vh", position: "relative", background: "#050810" }}
       >
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           <canvas
@@ -451,28 +451,28 @@ export default function WelcomeSection() {
             style={{ zIndex: 2 }}
           >
             <div>
-              <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-3">
+              <p className="font-ui tracking-[0.25em] text-xs text-ice uppercase mb-3">
                 Dalston, London
               </p>
               <h1
-                className="font-display font-bold leading-[0.9] text-text-primary"
+                className="font-display font-light leading-[0.9] text-text-primary tracking-[0.08em]"
                 style={{ fontSize: "clamp(4rem,9vw,9rem)" }}
               >
                 RAO&apos;S
               </h1>
-              <div className="w-px h-8 bg-gold/40 my-4" />
-              <p className="font-display italic text-text-secondary text-[0.95rem] leading-relaxed max-w-[220px]">
+              <div className="w-px h-8 bg-ice/40 my-4" />
+              <p className="font-display font-light italic text-text-secondary text-[0.95rem] leading-relaxed max-w-[220px]">
                 Where every flavour
                 <br />
                 tells a story.
               </p>
             </div>
             <div className="text-right">
-              <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-3">
+              <p className="font-ui tracking-[0.25em] text-xs text-ice uppercase mb-3">
                 Est. in tradition
               </p>
               <p
-                className="font-display font-bold leading-[1.0] text-text-primary"
+                className="font-display font-light leading-[1.0] text-text-primary"
                 style={{
                   fontSize: "clamp(1.8rem,3.5vw,3.5rem)",
                   letterSpacing: "0.02em",
@@ -480,7 +480,7 @@ export default function WelcomeSection() {
               >
                 Authentic.
                 <br />
-                <span className="text-gold">Uncompromised.</span>
+                <span className="font-semibold italic text-ice">Uncompromised.</span>
               </p>
             </div>
           </div>
@@ -491,18 +491,18 @@ export default function WelcomeSection() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
             style={{ zIndex: 2, opacity: 0 }}
           >
-            <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-4">
+            <p className="font-ui tracking-[0.25em] text-xs text-ice uppercase mb-4">
               The ingredients
             </p>
             <h2
-              className="font-display font-bold text-text-primary leading-[1.0]"
+              className="font-display font-light text-text-primary leading-[1.0]"
               style={{ fontSize: "clamp(2.8rem,6.5vw,7.5rem)" }}
             >
               Authentic
               <br />
-              <span className="text-gold">Spices.</span>
+              <span className="font-semibold italic text-ice">Spices.</span>
             </h2>
-            <p className="font-body text-text-secondary mt-5 text-[0.9rem] max-w-[480px] leading-relaxed">
+            <p className="font-body font-light text-text-secondary mt-5 text-[0.9rem] max-w-[480px] leading-relaxed">
               Sourced from across the subcontinent.
               <br />
               Ground fresh. Never compromised.
@@ -515,18 +515,18 @@ export default function WelcomeSection() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
             style={{ zIndex: 2, opacity: 0 }}
           >
-            <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-4">
+            <p className="font-ui tracking-[0.25em] text-xs text-ice uppercase mb-4">
               The craft
             </p>
             <h2
-              className="font-display font-bold text-text-primary leading-[1.0]"
+              className="font-display font-light text-text-primary leading-[1.0]"
               style={{ fontSize: "clamp(2.8rem,6.5vw,7.5rem)" }}
             >
               Traditional
               <br />
-              <span className="text-gold">Methods.</span>
+              <span className="font-semibold italic text-ice">Methods.</span>
             </h2>
-            <p className="font-body text-text-secondary mt-5 text-[0.9rem] max-w-[480px] leading-relaxed">
+            <p className="font-body font-light text-text-secondary mt-5 text-[0.9rem] max-w-[480px] leading-relaxed">
               Slow-cooked, hand-rolled, flame-kissed.
               <br />
               The way it&apos;s always been done.
@@ -539,11 +539,11 @@ export default function WelcomeSection() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
             style={{ zIndex: 2, opacity: 0 }}
           >
-            <p className="font-body text-[0.75rem] font-bold tracking-[0.25em] text-gold uppercase mb-6">
+            <p className="font-ui tracking-[0.25em] text-xs text-ice uppercase mb-6">
               The promise
             </p>
             <h2
-              className="font-display font-bold text-text-primary leading-[1.1]"
+              className="font-display font-light text-text-primary leading-[1.1]"
               style={{ fontSize: "clamp(2.4rem,5.5vw,6.5rem)" }}
             >
               <span className="s2-word inline-block">Royal</span>{" "}
@@ -551,7 +551,7 @@ export default function WelcomeSection() {
               <br />
               <span className="s2-word inline-block">Rooted</span>{" "}
               <span className="s2-word inline-block">in</span>{" "}
-              <span className="s2-word inline-block text-gold">tradition.</span>
+              <span className="s2-word inline-block font-semibold italic text-ice">tradition.</span>
             </h2>
           </div>
         </div>

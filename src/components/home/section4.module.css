@@ -1,7 +1,7 @@
 /* ─── Section Wrapper ───────────────────────────────────── */
 .sectionWrapper {
     position: relative;
-    background-color: #0D0D0D;
+    background-color: #050810;
     width: 100%;
 }
 
@@ -23,9 +23,9 @@
     right: 0;
     height: 72px;
     z-index: 50;
-    background: rgba(13, 13, 13, 0.9);
+    background: rgba(5, 8, 16, 0.9);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201, 169, 110, 0.08);
+    border-bottom: 1px solid rgba(196, 212, 240, 0.08);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -65,21 +65,21 @@
 }
 
 .categoryTabActive {
-    color: #C9A96E;
-    border-color: rgba(201, 169, 110, 0.6);
-    background: rgba(201, 169, 110, 0.06);
+    color: #C4D4F0;
+    border-color: rgba(196, 212, 240, 0.40);
+    background: rgba(196, 212, 240, 0.06);
 }
 
 .progressBarTrack {
     height: 3px;
-    background: rgba(201, 169, 110, 0.08);
+    background: rgba(196, 212, 240, 0.08);
     width: 100%;
     flex-shrink: 0;
 }
 
 .progressBar {
     height: 100%;
-    background: #C9A96E;
+    background: #C4D4F0;
     transform-origin: left center;
     will-change: width;
 }
@@ -108,7 +108,7 @@
     font-weight: 600;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: #C9A96E;
+    color: #C4D4F0;
     margin-bottom: 20px;
     display: block;
 }
@@ -136,7 +136,7 @@
 .mainHeaderDivider {
     width: 60px;
     height: 2px;
-    background: #C9A96E;
+    background: #C4D4F0;
     margin: 0 auto;
 }
 
@@ -188,8 +188,8 @@
 /* ─── Dish Card ──────────────────────────────────────────── */
 .dishCard {
     width: clamp(260px, 20vw, 320px);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(201, 169, 110, 0.12);
+    background: rgba(196, 212, 240, 0.04);
+    border: 1px solid rgba(196, 212, 240, 0.10);
     border-radius: 16px;
     overflow: hidden;
     flex-shrink: 0;
@@ -199,8 +199,8 @@
 }
 
 .dishCard:hover {
-    border-color: rgba(201, 169, 110, 0.35);
-    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(196, 212, 240, 0.25);
+    background: rgba(196, 212, 240, 0.07);
     transform: translateY(-4px);
 }
 
@@ -262,7 +262,7 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #C9A96E;
+    color: #C4D4F0;
     display: inline-block;
 }
 
@@ -270,7 +270,7 @@
     font-family: 'Truculenta', sans-serif;
     font-weight: 700;
     font-size: 15px;
-    color: #C9A96E;
+    color: #FF6B2B;
     white-space: nowrap;
     flex-shrink: 0;
     margin-top: 2px;
@@ -306,8 +306,8 @@
     font-size: 9px;
     font-weight: 600;
     letter-spacing: 0.06em;
-    color: rgba(201, 169, 110, 0.8);
-    border: 1px solid rgba(201, 169, 110, 0.3);
+    color: rgba(196, 212, 240, 0.8);
+    border: 1px solid rgba(196, 212, 240, 0.20);
     border-radius: 3px;
     padding: 2px 6px;
     line-height: 1.4;
@@ -333,8 +333,8 @@
     font-size: 12px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #C9A96E;
-    border: 1px solid rgba(201, 169, 110, 0.4);
+    color: #FF6B2B;
+    border: 1px solid rgba(255, 107, 43, 0.4);
     background: transparent;
     padding: 12px 32px;
     border-radius: 4px;
@@ -343,7 +343,7 @@
 }
 
 .browseMore:hover {
-    background: #C9A96E;
-    color: #0D0D0D;
-    border-color: #C9A96E;
+    background: #FF6B2B;
+    color: #050810;
+    border-color: #FF6B2B;
 }

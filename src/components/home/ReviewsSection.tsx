@@ -40,7 +40,7 @@ function Stars({ align = "left" }: { align?: "left" | "right" }) {
           viewBox="0 0 24 24"
           width="16"
           height="16"
-          style={{ fill: "#C9963B", flexShrink: 0 }}
+          style={{ fill: "#FF6B2B", flexShrink: 0 }}
         >
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
@@ -135,7 +135,7 @@ function GlassCard({
         borderRadius: "20px",
         maxWidth: "340px",
         cursor: "default",
-        border: "1px solid rgba(201,150,59,0.18)",
+        border: "1px solid rgba(196, 212, 240, 0.10)",
         boxShadow: "0 6px 6px rgba(0,0,0,0.3), 0 0 20px rgba(0,0,0,0.15)",
         textAlign: textAlign,
       }}
@@ -148,8 +148,8 @@ function GlassCard({
           zIndex: 0,
           overflow: "hidden",
           borderRadius: "20px",
-          backdropFilter: "blur(3px)",
-          WebkitBackdropFilter: "blur(3px)",
+          backdropFilter: "blur(16px) saturate(1.5)",
+          WebkitBackdropFilter: "blur(16px) saturate(1.5)",
           filter: "url(#rv-glass-distortion)",
           isolation: "isolate",
         }}
@@ -161,7 +161,7 @@ function GlassCard({
           inset: 0,
           zIndex: 1,
           borderRadius: "20px",
-          background: "rgba(201,150,59,0.06)",
+          background: "rgba(196, 212, 240, 0.04)",
         }}
       />
       {/* Layer 2 — gold edge specular */}
@@ -173,7 +173,7 @@ function GlassCard({
           borderRadius: "20px",
           overflow: "hidden",
           boxShadow:
-            "inset 2px 2px 1px 0 rgba(201,150,59,0.35), inset -1px -1px 1px 1px rgba(201,150,59,0.15)",
+            "inset 2px 2px 1px 0 rgba(196,212,240,0.20), inset -1px -1px 1px 1px rgba(196,212,240,0.08)",
         }}
       />
       {/* Layer 3 — content */}
@@ -270,7 +270,7 @@ export default function ReviewsSection() {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse at center bottom, rgba(201,150,59,0.08) 0%, transparent 60%)",
+              "radial-gradient(ellipse at center bottom, rgba(196,212,240,0.06) 0%, transparent 60%)",
             pointerEvents: "none",
           }}
         />
@@ -281,7 +281,7 @@ export default function ReviewsSection() {
           style={{ position: "absolute", left: "5%", top: "22%", zIndex: 3 }}
         >
           <h2
-            className="font-display font-bold text-text-primary"
+            className="font-display font-light text-text-primary"
             style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)", opacity: 0 }}
           >
             Straight from
@@ -300,8 +300,8 @@ export default function ReviewsSection() {
           }}
         >
           <h2
-            className="font-display font-bold italic text-gold"
-            style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)", opacity: 0 }}
+            className="font-display font-semibold italic"
+            style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)", opacity: 0, color: "#C4D4F0" }}
           >
             The Table
           </h2>
@@ -320,10 +320,10 @@ export default function ReviewsSection() {
             height: "auto",
             maxHeight: "80vh",
             borderRadius: "8px",
-            background: "#1A1A1A",
+            background: "#050810",
             marginLeft: "60px",
             filter:
-              "drop-shadow(0 20px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 80px rgba(201,150,59,0.12))",
+              "drop-shadow(0 20px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 80px rgba(196,212,240,0.08))",
           }}
         >
           <video
@@ -352,24 +352,26 @@ export default function ReviewsSection() {
           <GlassCard textAlign="left">
             <Stars align="left" />
             <blockquote
-              className="font-display italic text-text-primary"
+              className="font-display font-light italic text-text-primary"
               style={{ fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "14px" }}
             >
               &ldquo;{REVIEW_LEFT.quote}&rdquo;
             </blockquote>
             <div
-              className="text-text-secondary"
+              className="font-body text-text-secondary"
               style={{ fontSize: "0.85rem", letterSpacing: "0.05em" }}
             >
               {REVIEW_LEFT.author}
             </div>
             <div
-              className="text-gold"
               style={{
-                fontSize: "0.65rem",
-                letterSpacing: "0.1em",
+                fontFamily: "var(--font-ui)",
+                fontWeight: 600,
+                fontSize: "0.6rem",
+                letterSpacing: "0.15em",
                 textTransform: "uppercase",
                 marginTop: "4px",
+                color: "#C4D4F0",
               }}
             >
               {REVIEW_LEFT.source}
@@ -386,24 +388,26 @@ export default function ReviewsSection() {
           <GlassCard textAlign="right">
             <Stars align="right" />
             <blockquote
-              className="font-display italic text-text-primary"
+              className="font-display font-light italic text-text-primary"
               style={{ fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "14px" }}
             >
               &ldquo;{REVIEW_RIGHT.quote}&rdquo;
             </blockquote>
             <div
-              className="text-text-secondary"
+              className="font-body text-text-secondary"
               style={{ fontSize: "0.85rem", letterSpacing: "0.05em" }}
             >
               {REVIEW_RIGHT.author}
             </div>
             <div
-              className="text-gold"
               style={{
-                fontSize: "0.65rem",
-                letterSpacing: "0.1em",
+                fontFamily: "var(--font-ui)",
+                fontWeight: 600,
+                fontSize: "0.6rem",
+                letterSpacing: "0.15em",
                 textTransform: "uppercase",
                 marginTop: "4px",
+                color: "#C4D4F0",
               }}
             >
               {REVIEW_RIGHT.source}

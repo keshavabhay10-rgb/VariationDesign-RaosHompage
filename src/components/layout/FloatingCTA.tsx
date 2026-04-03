@@ -28,8 +28,8 @@ export default function FloatingCTA() {
       target="_blank"
       rel="noopener noreferrer"
       className={`fixed z-[90] bg-gold text-bg-primary font-body font-semibold text-sm tracking-[0.1em] uppercase flex items-center gap-2.5 transition-all duration-500 ease-out
-        bottom-8 left-1/2 -translate-x-1/2 py-3.5 px-9 rounded-full shadow-[0_4px_30px_rgba(201,150,59,0.35)]
-        hover:shadow-[0_8px_40px_rgba(201,150,59,0.5)]
+        bottom-8 left-1/2 -translate-x-1/2 py-3.5 px-9 rounded-full shadow-[0_4px_30px_rgba(196,212,240,0.15)]
+        hover:shadow-[0_8px_40px_rgba(255,107,43,0.4)]
         ${visible ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-24"}
       `}
     >
