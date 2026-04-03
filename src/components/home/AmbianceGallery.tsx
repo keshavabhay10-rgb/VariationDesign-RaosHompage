@@ -6,51 +6,51 @@ import styles from "./ambianceGallery.module.css";
 // ─── Panel Data ───────────────────────────────────────────────────────────────
 
 interface Panel {
-  type: 1 | 2; // 1 = TALL (top-anchored), 2 = SHORT (bottom-anchored)
   image: string;
   overlayText: string;
+  topLabel: string;
 }
 
 const PANELS: Panel[] = [
   {
-    type: 1,
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=1200&fit=crop",
-    overlayText: "Welcome to Rao's",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Dalston's corner of fire, flavour, and warmth",
+    topLabel: "Entrance",
   },
   {
-    type: 2,
-    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop",
-    overlayText: "Crafted with Care",
+    image: "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Where conversations come alive",
+    topLabel: "Bar",
   },
   {
-    type: 1,
-    image: "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=1200&fit=crop",
-    overlayText: "Gather Together",
+    image: "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Intimate gatherings, unforgettable moments",
+    topLabel: "Private",
   },
   {
-    type: 2,
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=600&fit=crop",
-    overlayText: "A Taste of Tradition",
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Heritage spices, modern expression",
+    topLabel: "Kitchen",
   },
   {
-    type: 1,
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=1200&fit=crop",
-    overlayText: "Warm Hospitality",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Every detail considered",
+    topLabel: "Interior",
   },
   {
-    type: 2,
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=600&fit=crop",
-    overlayText: "Sharing Plates",
+    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Artfully plated, joyfully shared",
+    topLabel: "Plates",
   },
   {
-    type: 1,
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=1200&fit=crop",
-    overlayText: "The Dining Room",
+    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Fire-kissed perfection",
+    topLabel: "Grill",
   },
   {
-    type: 2,
-    image: "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=600&fit=crop",
-    overlayText: "Your Table Awaits",
+    image: "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=1200&fit=crop&q=80",
+    overlayText: "Your table awaits",
+    topLabel: "Terrace",
   },
 ];
 
@@ -61,9 +61,10 @@ interface PanelProps {
   index: number;
   hoveredIndex: number | null;
   onHover: (index: number | null) => void;
+  totalPanels: number;
 }
 
-function AccordionPanel({ panel, index, hoveredIndex, onHover }: PanelProps) {
+function AccordionPanel({ panel, index, hoveredIndex, onHover, totalPanels }: PanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
@@ -72,20 +73,20 @@ function AccordionPanel({ panel, index, hoveredIndex, onHover }: PanelProps) {
   const isAnyHovered = hoveredIndex !== null;
   const isOther = isAnyHovered && !isHovered;
 
-  // Magnetic 3D tilt via requestAnimationFrame
+  // Subtle 3D tilt on hover
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!panelRef.current) return;
+    if (!panelRef.current || !isHovered) return;
     cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {
       const rect = panelRef.current!.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
       setTilt({
-        rotateY: (x - 0.5) * 8,
-        rotateX: (0.5 - y) * 6,
+        rotateY: (x - 0.5) * 4,
+        rotateX: (0.5 - y) * 3,
       });
     });
-  }, []);
+  }, [isHovered]);
 
   const handleMouseLeave = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
@@ -97,19 +98,18 @@ function AccordionPanel({ panel, index, hoveredIndex, onHover }: PanelProps) {
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
 
-  // Width: hovered = 45%, others shrink equally, default = equal split
+  // Width calculation: hovered = 35%, others shrink proportionally
   let widthStyle: string;
   if (isHovered) {
-    widthStyle = "45%";
+    widthStyle = "35%";
   } else if (isOther) {
-    widthStyle = "calc((100% - 45%) / 7)";
+    widthStyle = `calc((100% - 35%) / ${totalPanels - 1})`;
   } else {
-    widthStyle = "12.5%";
+    widthStyle = `${100 / totalPanels}%`;
   }
 
   const panelClass = [
     styles.panel,
-    panel.type === 1 ? styles.panelTall : styles.panelShort,
     isHovered ? styles.panelHovered : "",
     isOther ? styles.panelOther : "",
   ]
@@ -122,7 +122,9 @@ function AccordionPanel({ panel, index, hoveredIndex, onHover }: PanelProps) {
       className={panelClass}
       style={{
         width: widthStyle,
-        transform: `perspective(800px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+        transform: isHovered 
+          ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)` 
+          : undefined,
       }}
       onMouseEnter={() => onHover(index)}
       onMouseMove={handleMouseMove}
@@ -134,9 +136,22 @@ function AccordionPanel({ panel, index, hoveredIndex, onHover }: PanelProps) {
         className={styles.panelImage}
         loading="lazy"
       />
+      
+      {/* Top label - editorial style */}
+      <span className={styles.panelTopLabel}>{panel.topLabel}</span>
+      
+      {/* Bottom overlay with text */}
       <div className={styles.panelOverlay}>
         <span className={styles.panelOverlayText}>{panel.overlayText}</span>
       </div>
+      
+      {/* Panel index number */}
+      <span className={styles.panelIndex}>
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      
+      {/* Vertical divider line */}
+      {index < totalPanels - 1 && <div className={styles.panelDivider} />}
     </div>
   );
 }
@@ -148,14 +163,11 @@ export default function AmbianceGallery() {
 
   return (
     <section id="ambiance" className={styles.sectionWrapper}>
-      <div className={styles.header}>
+      <header className={styles.header}>
         <h2 className={styles.headerTitle}>
           The Space. The Feeling. The Food.
         </h2>
-        <p className={styles.headerSubtitle}>
-          Dalston&apos;s corner of fire, flavour, and warmth.
-        </p>
-      </div>
+      </header>
 
       <div className={styles.gallery}>
         {PANELS.map((panel, i) => (
@@ -165,6 +177,7 @@ export default function AmbianceGallery() {
             index={i}
             hoveredIndex={hoveredIndex}
             onHover={setHoveredIndex}
+            totalPanels={PANELS.length}
           />
         ))}
       </div>

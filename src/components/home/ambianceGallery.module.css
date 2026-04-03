@@ -1,13 +1,13 @@
+/* ─── Ambiance Gallery — Cold Editorial Accordion ────────────────────────── */
+
 /* ─── Section Wrapper ────────────────────────────────────────────────────── */
 .sectionWrapper {
   position: relative;
-  background: #090D1A;
-  padding: 60px 40px;
-  min-height: 90vh;
+  background: #0B0B0D;
+  padding: 80px 0 0 0;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   z-index: 2;
 }
@@ -15,82 +15,55 @@
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  padding: 0 40px;
+  margin-bottom: 60px;
 }
 
 .headerTitle {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 3.2rem);
   color: #C4D4F0;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 12px;
-}
-
-.headerSubtitle {
-  font-family: var(--font-ui);
-  font-weight: 500;
-  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-  letter-spacing: 0.08em;
-  color: #5C6A8A;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
 }
 
 /* ─── Gallery Container ──────────────────────────────────────────────────── */
 .gallery {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
-  max-width: 1400px;
-  height: 80vh;
-  gap: 0;
+  height: calc(100vh - 200px);
+  min-height: 500px;
+  gap: 2px;
   position: relative;
 }
 
 /* ─── Panel Base ─────────────────────────────────────────────────────────── */
 .panel {
   position: relative;
-  width: 12.5%;
-  border-radius: 12px;
+  height: 100%;
   overflow: hidden;
   cursor: pointer;
   flex-shrink: 0;
-  filter: saturate(0.15) brightness(0.6);
+  filter: saturate(0) brightness(0.4);
   transition:
-    width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    filter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 0.3s ease-out;
+    width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s ease-out;
   transform-style: preserve-3d;
   will-change: transform, width, filter;
-}
-
-/* TYPE 1 — TALL, top-anchored */
-.panelTall {
-  height: 75vh;
-  margin-top: 0;
-  margin-bottom: auto;
-  align-self: flex-start;
-}
-
-/* TYPE 2 — SHORT, bottom-anchored */
-.panelShort {
-  height: 55vh;
-  margin-top: auto;
-  margin-bottom: 0;
-  align-self: flex-end;
 }
 
 /* ─── Panel States ───────────────────────────────────────────────────────── */
 .panelHovered {
   filter: saturate(1) brightness(1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   z-index: 10;
 }
 
 .panelOther {
-  filter: saturate(0.1) brightness(0.4);
+  filter: saturate(0) brightness(0.25);
 }
 
 /* ─── Panel Image ────────────────────────────────────────────────────────── */
@@ -100,18 +73,29 @@
   object-fit: cover;
   display: block;
   pointer-events: none;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panelHovered .panelImage {
+  transform: scale(1.05);
 }
 
 /* ─── Hover Overlay ──────────────────────────────────────────────────────── */
 .panelOverlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 24px;
-  background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px 24px;
+  background: linear-gradient(
+    to top,
+    rgba(11, 11, 13, 0.85) 0%,
+    rgba(11, 11, 13, 0.4) 40%,
+    transparent 100%
+  );
   opacity: 0;
-  transition: opacity 0.3s ease 0.15s;
+  transition: opacity 0.4s ease 0.1s;
 }
 
 .panelHovered .panelOverlay {
@@ -120,51 +104,153 @@
 
 .panelOverlayText {
   font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  letter-spacing: 0.04em;
   color: #E8EEFF;
-  white-space: nowrap;
+  line-height: 1.4;
+  max-width: 280px;
 }
 
-/* ─── Responsive ─────────────────────────────────────────────────────────── */
+/* ─── Top Label (editorial style) ────────────────────────────────────────── */
+.panelTopLabel {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(196, 212, 240, 0.7);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: 
+    opacity 0.4s ease 0.2s,
+    transform 0.4s ease 0.2s;
+}
+
+.panelHovered .panelTopLabel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Panel Index Number ─────────────────────────────────────────────────── */
+.panelIndex {
+  position: absolute;
+  bottom: 32px;
+  right: 24px;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 2.5rem;
+  color: rgba(196, 212, 240, 0.15);
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.15s;
+}
+
+.panelHovered .panelIndex {
+  opacity: 1;
+}
+
+/* ─── Vertical Divider Lines ─────────────────────────────────────────────── */
+.panelDivider {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(196, 212, 240, 0.08) 20%,
+    rgba(196, 212, 240, 0.08) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ─── Responsive: Tablet ─────────────────────────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .panelTall {
-    height: 60vh;
-  }
-  .panelShort {
-    height: 45vh;
-  }
   .gallery {
-    height: 65vh;
+    height: calc(100vh - 180px);
+    min-height: 400px;
+  }
+
+  .panelOverlayText {
+    font-size: 0.9rem;
+  }
+
+  .panelIndex {
+    font-size: 2rem;
   }
 }
 
+/* ─── Responsive: Mobile ─────────────────────────────────────────────────── */
 @media (max-width: 767px) {
+  .sectionWrapper {
+    padding: 60px 0 0 0;
+    min-height: auto;
+  }
+
+  .header {
+    margin-bottom: 40px;
+    padding: 0 24px;
+  }
+
+  .headerTitle {
+    font-size: 1.4rem;
+  }
+
   .gallery {
     flex-direction: column;
     height: auto;
-    gap: 12px;
+    gap: 0;
   }
 
   .panel {
     width: 100% !important;
-    filter: saturate(1) brightness(1);
-    border-radius: 12px;
+    height: 220px;
+    filter: saturate(0.8) brightness(0.7);
+    transform: none !important;
   }
 
-  .panelTall,
-  .panelShort {
-    height: 200px;
-    margin: 0;
-    align-self: stretch;
+  .panelHovered {
+    filter: saturate(1) brightness(1);
   }
 
   .panelOther {
-    filter: saturate(1) brightness(1);
+    filter: saturate(0.8) brightness(0.7);
   }
 
   .panelOverlay {
     opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba(11, 11, 13, 0.9) 0%,
+      transparent 70%
+    );
+    padding: 20px;
+    justify-content: flex-end;
+  }
+
+  .panelOverlayText {
+    font-size: 0.85rem;
+  }
+
+  .panelTopLabel {
+    opacity: 0.6;
+    transform: translateY(0);
+    top: 16px;
+    left: 16px;
+    font-size: 0.6rem;
+  }
+
+  .panelIndex {
+    display: none;
+  }
+
+  .panelDivider {
+    display: none;
   }
 }
